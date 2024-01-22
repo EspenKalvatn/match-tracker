@@ -9,3 +9,17 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Match {
+  id          Int      @id @default(autoincrement())
+  homeTeam    String   @db.VarChar(255)
+  awayTeam    String   @db.VarChar(255)
+  homeScore   Int      @db.Int
+  awayScore   Int
+  date        DateTime
+  stadium     String   @db.VarChar(255)
+  competition String   @db.VarChar(255)
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
