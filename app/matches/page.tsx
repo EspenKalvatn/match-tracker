@@ -1,7 +1,12 @@
 import React from 'react';
+import { Button } from '@radix-ui/themes';
 
 const MyMatches = () => {
-  return <div>my matches</div>;
+  return (
+    <div>
+      <Button>Add new Match</Button>
+    </div>
+  );
 };
 
 export default MyMatches;
