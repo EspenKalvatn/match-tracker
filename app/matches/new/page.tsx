@@ -1,7 +1,10 @@
 'use client';
 import React, { useState } from 'react';
 import { Button, TextField, Callout, Text } from '@radix-ui/themes';
-import SimpleMdeReact from 'react-simplemde-editor';
+import dynamic from 'next/dynamic';
+const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
+  ssr: false,
+});
 import 'easymde/dist/easymde.min.css';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -107,7 +110,7 @@ const NewMatchPage = () => {
           name="description"
           control={control}
           render={({ field }) => (
-            <SimpleMdeReact placeholder="Add a note" {...field} />
+            <SimpleMDE placeholder="Add a note" {...field} />
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
