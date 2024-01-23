@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createMatchSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
+import ErrorMessage from '@/app/components/ErrorMessage';
 
 type MatchForm = z.infer<typeof createMatchSchema>;
 
@@ -46,19 +47,13 @@ const NewMatchPage = () => {
         <TextField.Root>
           <TextField.Input placeholder="Home team" {...register('homeTeam')} />
         </TextField.Root>
-        {errors.homeTeam && (
-          <Text color="red" as="p">
-            {errors.homeTeam.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.homeTeam?.message}</ErrorMessage>
+
         <TextField.Root>
           <TextField.Input placeholder="Away team" {...register('awayTeam')} />
         </TextField.Root>
-        {errors.awayTeam && (
-          <Text color="red" as="p">
-            {errors.awayTeam.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.awayTeam?.message}</ErrorMessage>
+
         <TextField.Root>
           <TextField.Input
             type="number"
@@ -66,11 +61,8 @@ const NewMatchPage = () => {
             {...register('homeScore', { valueAsNumber: true })}
           />
         </TextField.Root>
-        {errors.homeScore && (
-          <Text color="red" as="p">
-            {errors.homeScore.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.homeScore?.message}</ErrorMessage>
+
         <TextField.Root>
           <TextField.Input
             type="number"
@@ -78,30 +70,20 @@ const NewMatchPage = () => {
             {...register('awayScore', { valueAsNumber: true })}
           />
         </TextField.Root>
-        {errors.awayScore && (
-          <Text color="red" as="p">
-            {errors.awayScore.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.awayScore?.message}</ErrorMessage>
+
         <TextField.Root>
           <TextField.Input placeholder="Stadium" {...register('stadium')} />
         </TextField.Root>
-        {errors.stadium && (
-          <Text color="red" as="p">
-            {errors.stadium.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.stadium?.message}</ErrorMessage>
+
         <TextField.Root>
           <TextField.Input
             placeholder="Competition"
             {...register('competition')}
           />
         </TextField.Root>
-        {errors.competition && (
-          <Text color="red" as="p">
-            {errors.competition.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.competition?.message}</ErrorMessage>
 
         <Controller
           name="date"
@@ -115,11 +97,7 @@ const NewMatchPage = () => {
             />
           )}
         />
-        {errors.date && (
-          <Text color="red" as="p">
-            {errors.date.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.date?.message}</ErrorMessage>
 
         <Controller
           name="description"
@@ -128,11 +106,7 @@ const NewMatchPage = () => {
             <SimpleMdeReact placeholder="Add a note" {...field} />
           )}
         />
-        {errors.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button>Add new match</Button>
       </form>
