@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import { Button, TextField } from '@radix-ui/themes';
+import React, { useState } from 'react';
+import { Button, TextField, Callout } from '@radix-ui/themes';
 import SimpleMdeReact from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import { useForm, Controller } from 'react-hook-form';
@@ -24,67 +24,79 @@ interface MatchForm {
 const NewMatchPage = () => {
   const router = useRouter();
   const { register, control, handleSubmit } = useForm<MatchForm>();
+  const [error, setError] = useState('');
   return (
-    <form
-      className="max-w-xl space-y-3"
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post('/api/matches', data);
-        router.push('/matches');
-      })}
-    >
-      <TextField.Root>
-        <TextField.Input placeholder="Home team" {...register('homeTeam')} />
-      </TextField.Root>
-      <TextField.Root>
-        <TextField.Input placeholder="Away team" {...register('awayTeam')} />
-      </TextField.Root>
-      <TextField.Root>
-        <TextField.Input
-          type="number"
-          placeholder="Home score"
-          {...register('homeScore', { valueAsNumber: true })}
-        />
-      </TextField.Root>
-      <TextField.Root>
-        <TextField.Input
-          type="number"
-          placeholder="Away score"
-          {...register('awayScore', { valueAsNumber: true })}
-        />
-      </TextField.Root>
-      <TextField.Root>
-        <TextField.Input placeholder="Stadium" {...register('stadium')} />
-      </TextField.Root>
-      <TextField.Root>
-        <TextField.Input
-          placeholder="Competition"
-          {...register('competition')}
-        />
-      </TextField.Root>
-
-      <Controller
-        name="date"
-        control={control}
-        render={({ field }) => (
-          <DatePicker
-            selected={field.value}
-            onChange={(date) => field.onChange(date)}
-            dateFormat="yyyy-MM-dd"
-            placeholderText="Select a date"
+    <div className="max-w-xl">
+      {error && (
+        <Callout.Root className="mb-5" color="red">
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
+      <form
+        className=" space-y-3"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await axios.post('/api/matches', data);
+            router.push('/matches');
+          } catch (error) {
+            setError('An unexpected error occured');
+          }
+        })}
+      >
+        <TextField.Root>
+          <TextField.Input placeholder="Home team" {...register('homeTeam')} />
+        </TextField.Root>
+        <TextField.Root>
+          <TextField.Input placeholder="Away team" {...register('awayTeam')} />
+        </TextField.Root>
+        <TextField.Root>
+          <TextField.Input
+            type="number"
+            placeholder="Home score"
+            {...register('homeScore', { valueAsNumber: true })}
           />
-        )}
-      />
+        </TextField.Root>
+        <TextField.Root>
+          <TextField.Input
+            type="number"
+            placeholder="Away score"
+            {...register('awayScore', { valueAsNumber: true })}
+          />
+        </TextField.Root>
+        <TextField.Root>
+          <TextField.Input placeholder="Stadium" {...register('stadium')} />
+        </TextField.Root>
+        <TextField.Root>
+          <TextField.Input
+            placeholder="Competition"
+            {...register('competition')}
+          />
+        </TextField.Root>
 
-      <Controller
-        name="description"
-        control={control}
-        render={({ field }) => (
-          <SimpleMdeReact placeholder="Add a note" {...field} />
-        )}
-      />
+        <Controller
+          name="date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              selected={field.value}
+              onChange={(date) => field.onChange(date)}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select a date"
+            />
+          )}
+        />
 
-      <Button>Add new match</Button>
-    </form>
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <SimpleMdeReact placeholder="Add a note" {...field} />
+          )}
+        />
+
+        <Button>Add new match</Button>
+      </form>
+    </div>
   );
 };
 
