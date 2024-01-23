@@ -10,7 +10,7 @@ const createMatchSchema = z.object({
   date: z.string(),
   stadium: z.string().min(1).max(255),
   competition: z.string().min(1).max(255),
-  description: z.string().min(1),
+  description: z.string().min(0),
 });
 
 export async function POST(request: NextRequest) {
