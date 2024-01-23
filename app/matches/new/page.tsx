@@ -12,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { createMatchSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 
 type MatchForm = z.infer<typeof createMatchSchema>;
 
@@ -26,6 +27,7 @@ const NewMatchPage = () => {
     resolver: zodResolver(createMatchSchema),
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <div className="max-w-xl">
       {error && (
@@ -37,9 +39,11 @@ const NewMatchPage = () => {
         className=" space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setIsSubmitting(true);
             await axios.post('/api/matches', data);
             router.push('/matches');
           } catch (error) {
+            setIsSubmitting(false);
             setError('An unexpected error occured');
           }
         })}
@@ -108,7 +112,10 @@ const NewMatchPage = () => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button>Add new match</Button>
+        <Button disabled={isSubmitting}>
+          Add new match
+          {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
