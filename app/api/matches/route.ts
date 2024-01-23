@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/prisma/client';
-
-const createMatchSchema = z.object({
-  homeTeam: z.string().min(1).max(255),
-  awayTeam: z.string().min(1).max(255),
-  homeScore: z.number().min(0).max(100),
-  awayScore: z.number().min(0).max(100),
-  date: z.string(),
-  stadium: z.string().min(1).max(255),
-  competition: z.string().min(1).max(255),
-  description: z.string().min(0),
-});
+import { createMatchSchema } from '@/app/validationSchemas';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
