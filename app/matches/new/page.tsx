@@ -20,7 +20,11 @@ import Spinner from '@/app/components/Spinner';
 type MatchForm = z.infer<typeof createMatchSchema>;
 
 const NewMatchPage = () => {
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter();
+
   const {
     register,
     control,
@@ -29,8 +33,7 @@ const NewMatchPage = () => {
   } = useForm<MatchForm>({
     resolver: zodResolver(createMatchSchema),
   });
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   return (
     <div className="max-w-xl">
       {error && (
@@ -98,7 +101,10 @@ const NewMatchPage = () => {
           render={({ field }) => (
             <DatePicker
               selected={field.value ? new Date(field.value) : null}
-              onChange={(date) => field.onChange(date)}
+              onChange={(date) => {
+                const formattedDate = date ? date.toISOString() : null;
+                field.onChange(formattedDate);
+              }}
               dateFormat="yyyy-MM-dd"
               placeholderText="Select a date"
             />

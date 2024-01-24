@@ -16,7 +16,7 @@ model Match {
   awayTeam    String   @db.VarChar(255)
   homeScore   Int      @db.Int
   awayScore   Int
-  date        DateTime
+  date        String   @db.VarChar(255)
   stadium     String   @db.VarChar(255)
   competition String   @db.VarChar(255)
   description String   @db.Text
