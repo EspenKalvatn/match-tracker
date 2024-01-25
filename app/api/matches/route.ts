@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         date: body.date,
         stadium: body.stadium,
         competition: body.competition,
-        description: body.description,
+        userId: body.userId,
       },
     });
 

@@ -44,9 +44,11 @@ const NewMatchPage = () => {
       <form
         className=" space-y-3"
         onSubmit={handleSubmit(async (data) => {
+          // TODO: get userId from session
+          const userId = '65b2bfaccbabf784573f8a8e';
           try {
             setIsSubmitting(true);
-            await axios.post('/api/matches', data);
+            await axios.post('/api/matches', { ...data, userId });
             router.push('/matches');
           } catch (error) {
             setIsSubmitting(false);
@@ -112,14 +114,14 @@ const NewMatchPage = () => {
         />
         <ErrorMessage>{errors.date?.message}</ErrorMessage>
 
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <SimpleMDE placeholder="Add a note" {...field} />
-          )}
-        />
-        <ErrorMessage>{errors.description?.message}</ErrorMessage>
+        {/*<Controller*/}
+        {/*  name="description"*/}
+        {/*  control={control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <SimpleMDE placeholder="Add a note" {...field} />*/}
+        {/*  )}*/}
+        {/*/>*/}
+        {/*<ErrorMessage>{errors.description?.message}</ErrorMessage>*/}
 
         <Button disabled={isSubmitting}>
           Add new match

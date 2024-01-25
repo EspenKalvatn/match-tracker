@@ -6,18 +6,18 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const match = await prisma.match.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: params.id,
       },
     });
-    if (!match) {
+    if (!user) {
       return NextResponse.json({ status: 404, error: 'Resource not found' });
     }
 
-    return NextResponse.json(match, { status: 200 });
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error('Error fetching match:', error);
+    console.error('Error fetching user:', error);
     return NextResponse.json({ status: 500, error: 'Internal Server Error' });
   }
 }
@@ -27,7 +27,7 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
-    const match = await prisma.match.delete({
+    const user = await prisma.user.delete({
       where: {
         id: params.id,
       },
@@ -38,7 +38,7 @@ export async function DELETE(
       message: 'Resource deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting match:', error);
+    console.error('Error deleting user:', error);
     return NextResponse.json({ status: 500, error: 'Internal Server Error' });
   }
 }
