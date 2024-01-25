@@ -7,6 +7,12 @@ export async function GET() {
     const posts = await prisma.post.findMany({
       include: {
         match: true,
+        user: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
       },
     });
     return NextResponse.json(posts, { status: 200 });
