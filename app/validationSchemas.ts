@@ -18,10 +18,21 @@ export const createMatchSchema = z.object({
 });
 
 // TODO: Add proper validation
-export const createUserSchema = z.object({
-  name: z.string(),
+export const createUserSchema = z
+  .object({
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords does not match',
+  });
+
+export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8).max(255),
+  password: z.string().min(8),
 });
 
 // TODO: Add proper validation
