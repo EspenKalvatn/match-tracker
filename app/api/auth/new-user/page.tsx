@@ -1,18 +1,14 @@
 import React from 'react';
-import LoginForm from '@/app/login/form';
+import RegisterForm from '@/app/api/auth/new-user/form';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
-const LoginPage = async () => {
+const RegisterPage = async () => {
   const session = await getServerSession();
   if (session) {
     redirect('/');
   }
-  return (
-    <div>
-      <LoginForm />
-    </div>
-  );
+  return <RegisterForm />;
 };
 
-export default LoginPage;
+export default RegisterPage;

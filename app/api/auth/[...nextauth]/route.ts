@@ -8,7 +8,8 @@ export const handler = NextAuth({
     strategy: 'jwt',
   },
   pages: {
-    signIn: '/login',
+    signIn: '/auth/signin',
+    newUser: '/auth/new-user',
   },
   providers: [
     CredentialsProvider({

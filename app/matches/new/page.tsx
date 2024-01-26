@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Button, TextField, Callout, Text } from '@radix-ui/themes';
+import { Button, TextField, Callout, Text, Card } from '@radix-ui/themes';
 import dynamic from 'next/dynamic';
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
@@ -35,7 +35,7 @@ const NewMatchPage = () => {
   });
 
   return (
-    <div className="max-w-xl">
+    <Card className="max-w-xl">
       {error && (
         <Callout.Root className="mb-5" color="red">
           <Callout.Text>{error}</Callout.Text>
@@ -128,7 +128,7 @@ const NewMatchPage = () => {
           {isSubmitting && <Spinner />}
         </Button>
       </form>
-    </div>
+    </Card>
   );
 };
 

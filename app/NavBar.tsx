@@ -10,7 +10,6 @@ import { signOut, useSession } from 'next-auth/react';
 
 const NavBar = () => {
   const currentPath = usePathname();
-  const { data: session } = useSession();
 
   const links = [
     { label: 'Dashboard', href: '/' },
@@ -46,17 +45,7 @@ const NavBar = () => {
       </Flex>
 
       <Flex gap={'3'} justify={'end'} className="flex-1">
-        {!!session && <Button onClick={() => signOut()}>Logout</Button>}
-        {!session && (
-          <>
-            <Button>
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button>
-              <Link href="/register">Register</Link>
-            </Button>
-          </>
-        )}
+        {<Button onClick={() => signOut()}>SIGN OUT</Button>}
       </Flex>
     </Flex>
   );
