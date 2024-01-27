@@ -18,6 +18,7 @@ import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 type MatchForm = z.infer<typeof createMatchSchema>;
 
@@ -26,6 +27,7 @@ const NewMatchPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
+  const session = useSession();
 
   const {
     register,
@@ -47,10 +49,9 @@ const NewMatchPage = () => {
         <form
           className=" space-y-3"
           onSubmit={handleSubmit(async (data) => {
-            // TODO: get userId from session
-            const userId = '65b2bfaccbabf784573f8a8e';
             try {
               setIsSubmitting(true);
+              const userId = session.data?.user.id;
               await axios.post('/api/matches', { ...data, userId });
               router.push('/matches');
             } catch (error) {

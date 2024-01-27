@@ -62,6 +62,9 @@ const NavBar = () => {
               <Text size={'2'} color={'gray'}>
                 {session.data?.user.email}
               </Text>
+              <Text size={'2'} color={'gray'}>
+                role: {session.data?.user.role}
+              </Text>
               <Button>Go to profile</Button>
               <Button color={'red'} onClick={() => signOut()}>
                 SIGN OUT
