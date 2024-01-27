@@ -58,7 +58,6 @@ const RegisterForm = () => {
               const response = await axios.post('/api/auth/register', {
                 ...data,
               });
-              console.log(response);
               router.push('/api/auth/signin');
             } catch (error) {
               setIsSubmitting(false);

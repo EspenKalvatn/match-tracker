@@ -61,7 +61,7 @@ const LoginForm = () => {
                 router.refresh();
               }
             } catch (error) {
-              console.log('error', error);
+              console.error('error', error);
               setIsSubmitting(false);
               setError('Username or password is incorrect');
             }

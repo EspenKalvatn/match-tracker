@@ -3,13 +3,16 @@
 import Link from 'next/link';
 import React from 'react';
 import { GiSoccerField } from 'react-icons/gi';
+import { AiOutlineUser } from 'react-icons/ai';
+
 import { usePathname } from 'next/navigation';
 import classnames from 'classnames';
-import { Button, Flex } from '@radix-ui/themes';
-import { signOut } from 'next-auth/react';
+import { Button, Flex, Popover, Text } from '@radix-ui/themes';
+import { signOut, useSession } from 'next-auth/react';
 
 const NavBar = () => {
   const currentPath = usePathname();
+  const session = useSession();
 
   const links = [
     { label: 'Dashboard', href: '/' },
@@ -25,7 +28,7 @@ const NavBar = () => {
     >
       <Flex gap={'3'} align="center" className="flex-1">
         <Link href="/">
-          <GiSoccerField />
+          <GiSoccerField size={'25'} />
         </Link>
         <ul className="flex space-x-6">
           {links.map((link) => (
@@ -44,8 +47,28 @@ const NavBar = () => {
         </ul>
       </Flex>
 
-      <Flex gap={'3'} justify={'end'} className="flex-1">
-        {<Button onClick={() => signOut()}>SIGN OUT</Button>}
+      <Flex gap={'3'} justify={'end'} align={'center'} className="flex-1">
+        <Popover.Root>
+          <Popover.Trigger>
+            <Button variant={'ghost'}>
+              <AiOutlineUser size={'25'} />
+            </Button>
+          </Popover.Trigger>
+          <Popover.Content>
+            <Flex gap={'3'} direction={'column'}>
+              <Text size={'2'} color={'gray'}>
+                {session.data?.user.name}
+              </Text>
+              <Text size={'2'} color={'gray'}>
+                {session.data?.user.email}
+              </Text>
+              <Button>Go to profile</Button>
+              <Button color={'red'} onClick={() => signOut()}>
+                SIGN OUT
+              </Button>
+            </Flex>
+          </Popover.Content>
+        </Popover.Root>
       </Flex>
     </Flex>
   );
