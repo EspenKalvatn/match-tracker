@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Match` MODIFY `date` VARCHAR(255) NOT NULL;

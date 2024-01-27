@@ -29,8 +29,6 @@ const MyMatches = () => {
     return <p>Error loading matches</p>;
   }
 
-  console.log('matches', matches);
-
   return (
     <div>
       <Table.Root className="mb-5">

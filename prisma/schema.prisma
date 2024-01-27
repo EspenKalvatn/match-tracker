@@ -6,20 +6,52 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Match {
-  id          Int      @id @default(autoincrement())
-  homeTeam    String   @db.VarChar(255)
-  awayTeam    String   @db.VarChar(255)
-  homeScore   Int      @db.Int
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  homeTeam    String
+  awayTeam    String
+  homeScore   Int
   awayScore   Int
-  date        String   @db.VarChar(255)
-  stadium     String   @db.VarChar(255)
-  competition String   @db.VarChar(255)
-  description String   @db.Text
+  date        String
+  stadium     String
+  competition String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+  posts       Post[]   @relation("MatchPosts")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  likes     String[]
+  comments  String[]
+  match     Match    @relation("MatchPosts", fields: [matchId], references: [id])
+  matchId   String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String
+  role      Role     @default(USER)
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Match     Match[]
+  Post      Post[]
 }

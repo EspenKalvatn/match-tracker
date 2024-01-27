@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
 import prisma from '@/prisma/client';
 import { createMatchSchema } from '@/app/validationSchemas';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
         date: body.date,
         stadium: body.stadium,
         competition: body.competition,
-        description: body.description,
+        userId: body.userId,
       },
     });
 
@@ -32,8 +33,14 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
   try {
-    const matches = await prisma.match.findMany();
+    const isAdmin = session?.user.role === 'ADMIN';
+    const matches = await prisma.match.findMany({
+      where: {
+        ...(isAdmin ? {} : { userId: session?.user.id }),
+      },
+    });
     return NextResponse.json(matches, { status: 200 });
   } catch (error) {
     console.error('Error fetching matches:', error);
