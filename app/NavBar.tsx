@@ -6,7 +6,7 @@ import { GiSoccerField } from 'react-icons/gi';
 import { usePathname } from 'next/navigation';
 import classnames from 'classnames';
 import { Button, Flex } from '@radix-ui/themes';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 
 const NavBar = () => {
   const currentPath = usePathname();
