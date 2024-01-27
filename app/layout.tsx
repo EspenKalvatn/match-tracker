@@ -6,6 +6,7 @@ import { Theme, ThemePanel } from '@radix-ui/themes';
 import NavBar from './NavBar';
 import ReactQueryClientProvider from '@/app/components/ReactQueryClientProvider';
 import SessionProvider from '@/app/components/SessionProvider';
+import { getServerSession } from 'next-auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,6 +19,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession();
   return (
     <SessionProvider>
       <ReactQueryClientProvider>
@@ -29,7 +31,7 @@ export default async function RootLayout({
               panelBackground="solid"
               radius="large"
             >
-              <NavBar />
+              {session && <NavBar />}
               <main className="p-5">{children}</main>
               {/*<ThemePanel />*/}
             </Theme>
