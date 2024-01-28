@@ -30,7 +30,7 @@ model Post {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   content   String
   likes     Like[]
-  comments  String[]
+  comments  Comment[]
   match     Match    @relation("MatchPosts", fields: [matchId], references: [id])
   matchId   String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
@@ -45,6 +45,17 @@ model Like {
   postId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  content String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -65,4 +76,5 @@ model User {
   Match     Match[]
   Post      Post[]
   Like      Like[]
+  Comment   Comment[]
 }

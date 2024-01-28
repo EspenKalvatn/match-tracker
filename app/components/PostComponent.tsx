@@ -9,20 +9,31 @@ import {
   Separator,
   Text,
   TextArea,
+  TextField,
 } from '@radix-ui/themes';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
+import { HiOutlineDotsHorizontal } from 'react-icons/hi';
+
 import { IoMdFootball } from 'react-icons/io';
+import { AiOutlineSend } from 'react-icons/ai';
 import { Post } from '@/app/types/Post';
+import { createCommentSchema, createUserSchema } from '@/app/validationSchemas';
 
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { gray } from '@radix-ui/colors';
 import { useSession } from 'next-auth/react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import RegisterForm from '@/app/api/auth/new-user/form';
 
 // Function to calculate the time difference
 const getTimeAgo = (createdAt: string): string => {
   const createdAtDate = parseISO(createdAt);
   return formatDistanceToNow(createdAtDate, { addSuffix: true });
 };
+
+type CommentForm = z.infer<typeof createCommentSchema>;
 
 const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   const session = useSession();
@@ -54,6 +65,25 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
     }
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CommentForm>({
+    resolver: zodResolver(createCommentSchema),
+  });
+
+  const addComment = async (content: string) => {
+    const res = await fetch(`/api/posts/${post.id}/comment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content }),
+    });
+    // TODO: Maybe refresh page?
+  };
+
   const comments = [
     {
       'comment:': 'Great match!',
@@ -69,21 +99,44 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
-        <Flex gap="5" align="center">
-          <Avatar
-            size="3"
-            src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
-            radius="full"
-            fallback="T"
-          />
-          <Box className="">
-            <Text as="div" size="2" weight="bold">
-              {post.user.name}
-            </Text>
-            <Text as="div" size="1" color="gray">
-              {getTimeAgo(post.createdAt)}
-            </Text>
-          </Box>
+        <Flex justify={'between'}>
+          <Flex gap="5" align="center">
+            <Avatar
+              size="3"
+              src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+              radius="full"
+              fallback="T"
+            />
+            <Box className="">
+              <Text as="div" size="2" weight="bold">
+                {post.user.name}
+              </Text>
+              <Text as="div" size="1" color="gray">
+                {getTimeAgo(post.createdAt)}
+              </Text>
+            </Box>
+          </Flex>
+          <Popover.Root>
+            <Popover.Trigger>
+              <Button variant="ghost" color={'gray'}>
+                <HiOutlineDotsHorizontal />
+              </Button>
+            </Popover.Trigger>
+            <Popover.Content>
+              <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
+                {post.userId === session.data?.user.id && (
+                  <Flex direction={'column'} gap={'3'}>
+                    <Button variant="ghost" color="gray">
+                      Edit post
+                    </Button>
+                    <Button variant="ghost" color="red">
+                      Delete post
+                    </Button>
+                  </Flex>
+                )}
+              </Flex>
+            </Popover.Content>
+          </Popover.Root>
         </Flex>
 
         <Flex gap="5" align="center">
@@ -187,17 +240,67 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
         <div>
           <Separator my="3" size="4" />
           <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-            {post.comments.map((comment, index) => (
-              <div key={index}>
-                <Text as="div" size="1" color="gray">
-                  {/*{comment.content}*/}
-                </Text>
-              </div>
+            {post.comments.map((comment) => (
+              <Flex key={comment.id} gap={'3'}>
+                <Avatar
+                  size="2"
+                  src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+                  radius="full"
+                  fallback={comment.user.name[0]}
+                />
+                <Flex direction={'column'} className={'w-full'}>
+                  <Card>
+                    <Flex direction={'column'} gap="2">
+                      <Text size={'1'} color={'gray'}>
+                        {comment.user.name}
+                      </Text>
+                      <Text size={'2'}>{comment.content}</Text>
+                    </Flex>
+                  </Card>
+                  <Text size={'1'} color={'gray'}>
+                    {getTimeAgo(comment.createdAt)}
+                  </Text>
+                </Flex>
+              </Flex>
             ))}
           </Flex>
-          <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-            <TextArea size="2" placeholder="Reply to comment…" />
-          </Flex>
+          <form
+            className={'pt-5'}
+            onSubmit={handleSubmit(async (data) => {
+              console.log(data);
+              try {
+                const res = await fetch(`/api/posts/${post.id}/comment`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ content: data.content }),
+                });
+              } catch (error) {
+                console.log(error);
+              }
+              console.log('submitted');
+            })}
+          >
+            <Flex gap="3" justify={'between'} align={'center'}>
+              <Avatar
+                size="2"
+                src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+                radius="full"
+                fallback={session.data?.user.name[0]}
+              />
+              <TextField.Root className={'w-full'}>
+                <TextField.Input
+                  placeholder="Reply to comment…"
+                  {...register('content')}
+                />
+              </TextField.Root>
+
+              <Button variant={'ghost'} color={'gray'}>
+                <AiOutlineSend />{' '}
+              </Button>
+            </Flex>
+          </form>
         </div>
       )}
     </Card>

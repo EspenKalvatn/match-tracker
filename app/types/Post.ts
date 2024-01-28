@@ -25,10 +25,13 @@ interface Like {
   updatedAt: string;
 }
 interface Comment {
-  content: string;
+  id: string;
   userId: string;
   user: {
     name: string;
     id: string;
   };
+  content: string;
+  createdAt: string;
+  updatedAt: string;
 }

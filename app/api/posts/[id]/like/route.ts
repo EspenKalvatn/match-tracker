@@ -11,25 +11,11 @@ export async function POST(
     // const body = await request.json();
     const session = await getServerSession(authOptions);
 
-    const post = await prisma.post.findUnique({
+    const likes = await prisma.like.findMany({
       where: {
-        id: params.id,
-      },
-      include: {
-        likes: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
+        postId: params.id,
       },
     });
-
-    const likes = post?.likes || [];
 
     if (likes.map((like) => like.userId).includes(session?.user.id)) {
       return NextResponse.json('Like already exists', { status: 403 });

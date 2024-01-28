@@ -43,3 +43,7 @@ export const createPostSchema = z.object({
   userId: z.string(),
   matchId: z.string(),
 });
+
+export const createCommentSchema = z.object({
+  content: z.string(),
+});

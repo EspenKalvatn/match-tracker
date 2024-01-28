@@ -23,6 +23,16 @@ export async function GET() {
             },
           },
         },
+        comments: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
       },
     });
     return NextResponse.json(posts, { status: 200 });
