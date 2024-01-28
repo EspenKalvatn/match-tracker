@@ -34,17 +34,21 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
 
   const handleLike = async () => {
     if (isLiked) {
-      // TODO: remove like from post
-      // TODO: update like isLiked state
+      const res = await fetch(`/api/posts/${post.id}/like`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       setIsLiked(false);
     } else {
-      const like = await fetch(`/api/posts/${post.id}/like`, {
+      const res = await fetch(`/api/posts/${post.id}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      if (like.ok) {
+      if (res.ok) {
         setIsLiked(true);
       }
     }
