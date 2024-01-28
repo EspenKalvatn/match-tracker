@@ -1,6 +1,8 @@
 import prisma from '@/prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { createPostSchema } from '@/app/validationSchemas';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/lib/auth';
 
 export async function GET() {
   try {
@@ -59,8 +61,6 @@ export async function POST(request: NextRequest) {
     const newPost = await prisma.post.create({
       data: {
         content: body.content,
-        likes: body.likes,
-        comments: body.comments,
         userId: body.userId,
         matchId: body.matchId,
       },

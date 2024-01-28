@@ -26,6 +26,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import RegisterForm from '@/app/api/auth/new-user/form';
+import { useRouter } from 'next/navigation';
 
 // Function to calculate the time difference
 const getTimeAgo = (createdAt: string): string => {
@@ -36,6 +37,7 @@ const getTimeAgo = (createdAt: string): string => {
 type CommentForm = z.infer<typeof createCommentSchema>;
 
 const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
+  const router = useRouter();
   const session = useSession();
   const user = session.data?.user;
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,6 +65,28 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
         setIsLiked(true);
       }
     }
+    router.refresh();
+  };
+
+  const deleteComment = (commentId: string) => async () => {
+    const res = await fetch(`/api/posts/${post.id}/comment/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ commentId }),
+    });
+    router.refresh();
+  };
+
+  const deletePost = (postId: string) => async () => {
+    const res = await fetch(`/api/posts/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    router.refresh();
   };
 
   const {
@@ -83,18 +107,6 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
     });
     // TODO: Maybe refresh page?
   };
-
-  const comments = [
-    {
-      'comment:': 'Great match!',
-    },
-    {
-      'comment:': 'Nice!',
-    },
-    {
-      'comment:': 'Fantastic atmosphere!',
-    },
-  ];
 
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
@@ -126,10 +138,11 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
               <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
                 {post.userId === session.data?.user.id && (
                   <Flex direction={'column'} gap={'3'}>
-                    <Button variant="ghost" color="gray">
-                      Edit post
-                    </Button>
-                    <Button variant="ghost" color="red">
+                    <Button
+                      variant="ghost"
+                      color="red"
+                      onClick={deletePost(post.id)}
+                    >
                       Delete post
                     </Button>
                   </Flex>
@@ -198,14 +211,15 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
             </Popover.Content>
           </Popover.Root>
 
-          <Popover.Root>
-            <Popover.Trigger>
-              <Text color={'gray'} size={'1'}>
-                {post.comments.length} comments
-              </Text>
-            </Popover.Trigger>
-            <Popover.Content>TODO</Popover.Content>
-          </Popover.Root>
+          <Button
+            color={'gray'}
+            variant={'ghost'}
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <Text color={'gray'} size={'1'}>
+              {post.comments.length} comments
+            </Text>
+          </Button>
         </Flex>
 
         <Separator my="0" size="4" />
@@ -257,9 +271,42 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
                       <Text size={'2'}>{comment.content}</Text>
                     </Flex>
                   </Card>
-                  <Text size={'1'} color={'gray'}>
-                    {getTimeAgo(comment.createdAt)}
-                  </Text>
+                  <Flex
+                    justify={'between'}
+                    align={'center'}
+                    className={'pl-2 pr-2'}
+                  >
+                    <Text size={'1'} color={'gray'}>
+                      {getTimeAgo(comment.createdAt)}
+                    </Text>
+
+                    <Popover.Root>
+                      <Popover.Trigger>
+                        <Button variant="ghost" color={'gray'}>
+                          <HiOutlineDotsHorizontal />
+                        </Button>
+                      </Popover.Trigger>
+                      <Popover.Content>
+                        <Flex
+                          direction="column"
+                          gap="3"
+                          style={{ maxWidth: 500 }}
+                        >
+                          {comment.userId === session.data?.user.id && (
+                            <Flex direction={'column'} gap={'3'}>
+                              <Button
+                                variant="ghost"
+                                color="red"
+                                onClick={deleteComment(comment.id)}
+                              >
+                                Delete comment
+                              </Button>
+                            </Flex>
+                          )}
+                        </Flex>
+                      </Popover.Content>
+                    </Popover.Root>
+                  </Flex>
                 </Flex>
               </Flex>
             ))}
