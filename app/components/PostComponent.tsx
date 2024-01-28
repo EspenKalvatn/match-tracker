@@ -8,24 +8,20 @@ import {
   Popover,
   Separator,
   Text,
-  TextArea,
   TextField,
 } from '@radix-ui/themes';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
-import { IoMdFootball } from 'react-icons/io';
 import { AiOutlineSend } from 'react-icons/ai';
 import { Post } from '@/app/types/Post';
 import { createCommentSchema, createUserSchema } from '@/app/validationSchemas';
 
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { gray } from '@radix-ui/colors';
 import { useSession } from 'next-auth/react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import RegisterForm from '@/app/api/auth/new-user/form';
 import { useRouter } from 'next/navigation';
 
 // Function to calculate the time difference
@@ -65,7 +61,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
         setIsLiked(true);
       }
     }
-    router.refresh();
+    location.reload();
   };
 
   const deleteComment = (commentId: string) => async () => {
@@ -76,7 +72,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
       },
       body: JSON.stringify({ commentId }),
     });
-    router.refresh();
+    location.reload();
   };
 
   const deletePost = (postId: string) => async () => {
@@ -86,7 +82,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
         'Content-Type': 'application/json',
       },
     });
-    router.refresh();
+    location.reload();
   };
 
   const {
@@ -362,7 +358,6 @@ const TeamAndScore: React.FC<{ team: string; score: number }> = ({
   return (
     <Flex justify="between">
       <Flex gap="2" align="center">
-        {/*<IoMdFootball />*/}
         <Text as="div" size="3">
           {team}
         </Text>
