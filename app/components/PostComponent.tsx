@@ -5,20 +5,49 @@ import {
   Button,
   Card,
   Flex,
+  Popover,
   Separator,
   Text,
   TextArea,
 } from '@radix-ui/themes';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { IoMdFootball } from 'react-icons/io';
+import { Post } from '@/app/types/Post';
 
-const Post = () => {
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { gray } from '@radix-ui/colors';
+import { useSession } from 'next-auth/react';
+
+// Function to calculate the time difference
+const getTimeAgo = (createdAt: string): string => {
+  const createdAtDate = parseISO(createdAt);
+  return formatDistanceToNow(createdAtDate, { addSuffix: true });
+};
+
+const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
+  const session = useSession();
+  const user = session.data?.user;
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(
+    post.likes.map((like) => like.userId).includes(user?.id),
+  );
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    // TODO: send request to server
+  const handleLike = async () => {
+    if (isLiked) {
+      // TODO: remove like from post
+      // TODO: update like isLiked state
+      setIsLiked(false);
+    } else {
+      const like = await fetch(`/api/posts/${post.id}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (like.ok) {
+        setIsLiked(true);
+      }
+    }
   };
 
   const comments = [
@@ -34,7 +63,7 @@ const Post = () => {
   ];
 
   return (
-    <Card style={{ maxWidth: 500 }}>
+    <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
         <Flex gap="5" align="center">
           <Avatar
@@ -45,22 +74,28 @@ const Post = () => {
           />
           <Box className="">
             <Text as="div" size="2" weight="bold">
-              Teodros Girmay
+              {post.user.name}
             </Text>
             <Text as="div" size="1" color="gray">
-              about 3 days ago
+              {getTimeAgo(post.createdAt)}
             </Text>
           </Box>
         </Flex>
 
         <Flex gap="5" align="center">
           <Text as="div" size="2" color="gray">
-            11.10.22
+            {new Date(post.match.date).toLocaleDateString('en-GB')}
           </Text>
 
           <Flex direction="column" className="flex-1">
-            <TeamAndScore team="Copenhagen" score={0} />
-            <TeamAndScore team="Manchester Cty" score={0} />
+            <TeamAndScore
+              team={post.match.homeTeam}
+              score={post.match.homeScore}
+            />
+            <TeamAndScore
+              team={post.match.awayTeam}
+              score={post.match.awayScore}
+            />
           </Flex>
         </Flex>
 
@@ -70,7 +105,7 @@ const Post = () => {
               Competition
             </Text>
             <Text as="div" size="2">
-              UEFA Champions league
+              {post.match.competition}
             </Text>
           </Flex>
           <Flex direction="column" className="flex-1">
@@ -78,16 +113,44 @@ const Post = () => {
               Ground name
             </Text>
             <Text as="div" size="2">
-              Parken Stadium
+              {post.match.stadium}
             </Text>
           </Flex>
         </Flex>
-        <Separator my="0" size="4" />
-        <Text as="div" size="2">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+        <Text as="div" size="2" className={'pt-5'}>
+          {post.content}
         </Text>
+
+        <Flex align="stretch" justify="between" className="">
+          <Popover.Root>
+            <Popover.Trigger>
+              <Text color={'gray'} size={'1'}>
+                {post.likes.length} likes
+              </Text>
+            </Popover.Trigger>
+            <Popover.Content>
+              <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
+                {post.likes.map((like) => (
+                  <div key={like.id}>
+                    <Text as="div" size="1" color="gray">
+                      {like.user.name}
+                    </Text>
+                  </div>
+                ))}
+              </Flex>
+            </Popover.Content>
+          </Popover.Root>
+
+          <Popover.Root>
+            <Popover.Trigger>
+              <Text color={'gray'} size={'1'}>
+                {post.comments.length} comments
+              </Text>
+            </Popover.Trigger>
+            <Popover.Content>TODO</Popover.Content>
+          </Popover.Root>
+        </Flex>
+
         <Separator my="0" size="4" />
 
         <Flex align="stretch" justify="between" className="">
@@ -120,10 +183,10 @@ const Post = () => {
         <div>
           <Separator my="3" size="4" />
           <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-            {comments.map((comment) => (
-              <div key={comment['comment:']}>
+            {post.comments.map((comment, index) => (
+              <div key={index}>
                 <Text as="div" size="1" color="gray">
-                  {comment['comment:']}
+                  {/*{comment.content}*/}
                 </Text>
               </div>
             ))}
@@ -136,7 +199,7 @@ const Post = () => {
     </Card>
   );
 };
-export default Post;
+export default PostComponent;
 
 const TeamAndScore: React.FC<{ team: string; score: number }> = ({
   team,
@@ -145,7 +208,7 @@ const TeamAndScore: React.FC<{ team: string; score: number }> = ({
   return (
     <Flex justify="between">
       <Flex gap="2" align="center">
-        <IoMdFootball />
+        {/*<IoMdFootball />*/}
         <Text as="div" size="3">
           {team}
         </Text>

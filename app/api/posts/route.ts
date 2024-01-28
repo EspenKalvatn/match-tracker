@@ -13,6 +13,16 @@ export async function GET() {
             id: true,
           },
         },
+        likes: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
       },
     });
     return NextResponse.json(posts, { status: 200 });

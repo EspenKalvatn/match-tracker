@@ -15,7 +15,7 @@ const NavBar = () => {
   const session = useSession();
 
   const links = [
-    { label: 'Dashboard', href: '/' },
+    { label: 'Home', href: '/' },
     { label: 'My matches', href: '/matches' },
   ];
 
