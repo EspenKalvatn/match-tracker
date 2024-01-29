@@ -24,7 +24,7 @@ interface Like {
   createdAt: string;
   updatedAt: string;
 }
-interface Comment {
+export interface Comment {
   id: string;
   userId: string;
   user: {

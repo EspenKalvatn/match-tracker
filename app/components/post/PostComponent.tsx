@@ -10,14 +10,10 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes';
-import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
-import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
 import { AiOutlineSend } from 'react-icons/ai';
 import { Post } from '@/app/types/Post';
-import { createCommentSchema, createUserSchema } from '@/app/validationSchemas';
-
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import { createCommentSchema } from '@/app/validationSchemas';
 import { useSession } from 'next-auth/react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -27,12 +23,12 @@ import PostHeader from '@/app/components/post/PostHeader';
 import MatchDetails from '@/app/components/post/MatchDetails';
 import PostContent from '@/app/components/post/PostContent';
 import PostActions from '@/app/components/post/PostActions';
-
-// Function to calculate the time difference
-const getTimeAgo = (createdAt: string): string => {
-  const createdAtDate = parseISO(createdAt);
-  return formatDistanceToNow(createdAtDate, { addSuffix: true });
-};
+import OptionsMenu from '@/app/components/post/OptionsMenu';
+import { getTimeAgo } from '@/app/utils/DateTimeHelper';
+import Comment from '@/app/components/post/Comment';
+import CommentForm, {
+  CommentFormData,
+} from '@/app/components/post/CommentForm';
 
 type CommentForm = z.infer<typeof createCommentSchema>;
 
@@ -68,7 +64,32 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
     location.reload();
   };
 
+  const handleCommentSubmit = async (data: CommentFormData) => {
+    try {
+      const res = await fetch(`/api/posts/${post.id}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: data.content }),
+      });
+
+      if (res.ok) {
+        console.log('Comment submitted successfully');
+        // Optionally, you can update the UI with the new comment without reloading the entire page.
+        // Fetch the updated post data and set it in the component state.
+        // For simplicity, you can reload the entire page for now.
+        location.reload();
+      } else {
+        console.error('Failed to submit comment');
+      }
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+    }
+  };
+
   const deleteComment = (commentId: string) => async () => {
+    console.log('delete comment');
     const res = await fetch(`/api/posts/${post.id}/comment/`, {
       method: 'DELETE',
       headers: {
@@ -76,6 +97,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
       },
       body: JSON.stringify({ commentId }),
     });
+    console.log('deleted comment');
     location.reload();
   };
 
@@ -102,29 +124,13 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
       <Flex gap="3" direction="column">
         <Flex justify={'between'}>
           <PostHeader user={post.user} createdAt={getTimeAgo(post.createdAt)} />
-
-          <Popover.Root>
-            <Popover.Trigger>
-              <Button variant="ghost" color={'gray'}>
-                <HiOutlineDotsHorizontal />
-              </Button>
-            </Popover.Trigger>
-            <Popover.Content>
-              <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-                {post.userId === session.data?.user.id && (
-                  <Flex direction={'column'} gap={'3'}>
-                    <Button
-                      variant="ghost"
-                      color="red"
-                      onClick={deletePost(post.id)}
-                    >
-                      Delete post
-                    </Button>
-                  </Flex>
-                )}
-              </Flex>
-            </Popover.Content>
-          </Popover.Root>
+          <OptionsMenu
+            userId={post.userId}
+            currentUserId={session.data?.user.id}
+            onDelete={deletePost(post.id)}
+          >
+            Delete post
+          </OptionsMenu>
         </Flex>
 
         <MatchDetails post={post} />
@@ -196,99 +202,14 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
           <Separator my="3" size="4" />
           <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
             {post.comments.map((comment) => (
-              <Flex key={comment.id} gap={'3'}>
-                <Avatar
-                  size="2"
-                  src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
-                  radius="full"
-                  fallback={comment.user.name[0]}
-                />
-                <Flex direction={'column'} className={'w-full'}>
-                  <Card>
-                    <Flex direction={'column'} gap="2">
-                      <Text size={'1'} color={'gray'}>
-                        {comment.user.name}
-                      </Text>
-                      <Text size={'2'}>{comment.content}</Text>
-                    </Flex>
-                  </Card>
-                  <Flex
-                    justify={'between'}
-                    align={'center'}
-                    className={'pl-2 pr-2'}
-                  >
-                    <Text size={'1'} color={'gray'}>
-                      {getTimeAgo(comment.createdAt)}
-                    </Text>
-
-                    <Popover.Root>
-                      <Popover.Trigger>
-                        <Button variant="ghost" color={'gray'}>
-                          <HiOutlineDotsHorizontal />
-                        </Button>
-                      </Popover.Trigger>
-                      <Popover.Content>
-                        <Flex
-                          direction="column"
-                          gap="3"
-                          style={{ maxWidth: 500 }}
-                        >
-                          {comment.userId === session.data?.user.id && (
-                            <Flex direction={'column'} gap={'3'}>
-                              <Button
-                                variant="ghost"
-                                color="red"
-                                onClick={deleteComment(comment.id)}
-                              >
-                                Delete comment
-                              </Button>
-                            </Flex>
-                          )}
-                        </Flex>
-                      </Popover.Content>
-                    </Popover.Root>
-                  </Flex>
-                </Flex>
-              </Flex>
+              <Comment
+                comment={comment}
+                sessionUserId={session.data?.user.id}
+                deleteComment={deleteComment(comment.id)}
+              />
             ))}
           </Flex>
-          <form
-            className={'pt-5'}
-            onSubmit={handleSubmit(async (data) => {
-              console.log(data);
-              try {
-                const res = await fetch(`/api/posts/${post.id}/comment`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ content: data.content }),
-                });
-              } catch (error) {
-                console.log(error);
-              }
-              location.reload();
-            })}
-          >
-            <Flex gap="3" justify={'between'} align={'center'}>
-              <Avatar
-                size="2"
-                src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
-                radius="full"
-                fallback={session.data?.user.name[0]}
-              />
-              <TextField.Root className={'w-full'}>
-                <TextField.Input
-                  placeholder="Reply to comment…"
-                  {...register('content')}
-                />
-              </TextField.Root>
-
-              <Button variant={'ghost'} color={'gray'}>
-                <AiOutlineSend />{' '}
-              </Button>
-            </Flex>
-          </form>
+          <CommentForm onSubmit={handleCommentSubmit} />
         </div>
       )}
     </Card>
