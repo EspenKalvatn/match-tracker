@@ -3,6 +3,62 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/lib/auth';
 import prisma from '@/prisma/client';
 
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    const post = await prisma.post.findUnique({
+      where: {
+        id: params.id,
+      },
+      include: {
+        match: true,
+        user: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        likes: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+        comments: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!post) {
+      return NextResponse.json('Post not found', { status: 404 });
+    }
+
+    if (post.userId !== session?.user.id) {
+      return NextResponse.json('Unauthorized', { status: 401 });
+    }
+
+    return NextResponse.json(post, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } },

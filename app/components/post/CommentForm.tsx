@@ -1,13 +1,13 @@
 import React from 'react';
 import { Avatar, Button, Flex, TextField } from '@radix-ui/themes';
 import { AiOutlineSend } from 'react-icons/ai';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createCommentSchema } from '@/app/validationSchemas';
 
-type CommentFormProps = {
-  onSubmit: (data: CommentFormData) => Promise<void>;
-};
+interface CommentFormProps {
+  onSubmit: SubmitHandler<CommentFormData>;
+}
 
 export type CommentFormData = {
   content: string;
@@ -18,15 +18,16 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit }) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CommentFormData>({
     resolver: zodResolver(createCommentSchema),
   });
-
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
           await onSubmit(data);
+          reset(); // Pass the reset function to the onSubmit callback
         } catch (error) {
           console.error(error);
         }

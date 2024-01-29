@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -36,14 +36,20 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   const router = useRouter();
   const session = useSession();
   const user = session.data?.user;
+  const [postData, setPostData] = useState(post);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLiked, setIsLiked] = useState(
-    post.likes.map((like) => like.userId).includes(user?.id),
+    postData.likes.map((like) => like.userId).includes(user?.id),
   );
+
+  useEffect(() => {
+    // Update the component state with the initial post data
+    setPostData(post);
+  }, [post]);
 
   const handleLike = async () => {
     if (isLiked) {
-      const res = await fetch(`/api/posts/${post.id}/like`, {
+      const res = await fetch(`/api/posts/${postData.id}/like`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +57,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
       });
       setIsLiked(false);
     } else {
-      const res = await fetch(`/api/posts/${post.id}/like`, {
+      const res = await fetch(`/api/posts/${postData.id}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +72,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
 
   const handleCommentSubmit = async (data: CommentFormData) => {
     try {
-      const res = await fetch(`/api/posts/${post.id}/comment`, {
+      const res = await fetch(`/api/posts/${postData.id}/comment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,10 +82,14 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
 
       if (res.ok) {
         console.log('Comment submitted successfully');
-        // Optionally, you can update the UI with the new comment without reloading the entire page.
-        // Fetch the updated post data and set it in the component state.
-        // For simplicity, you can reload the entire page for now.
-        location.reload();
+
+        // Fetch the updated post data
+        const updatedPostResponse = await fetch(`/api/posts/${postData.id}`);
+        const updatedPostData = await updatedPostResponse.json();
+
+        // Update the component state with the new post data
+        setPostData(updatedPostData);
+        setIsExpanded(true); // Optionally, expand the comment section
       } else {
         console.error('Failed to submit comment');
       }
@@ -90,7 +100,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
 
   const deleteComment = (commentId: string) => async () => {
     console.log('delete comment');
-    const res = await fetch(`/api/posts/${post.id}/comment/`, {
+    const res = await fetch(`/api/posts/${postData.id}/comment/`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -119,21 +129,29 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
     resolver: zodResolver(createCommentSchema),
   });
 
+  if (postData.id === '65b5849531f9589fb66e0fe9') {
+    console.log('post', post);
+    console.log('comments', postData.comments.length);
+  }
+
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
         <Flex justify={'between'}>
-          <PostHeader user={post.user} createdAt={getTimeAgo(post.createdAt)} />
+          <PostHeader
+            user={postData.user}
+            createdAt={getTimeAgo(postData.createdAt)}
+          />
           <OptionsMenu
-            userId={post.userId}
+            userId={postData.userId}
             currentUserId={session.data?.user.id}
-            onDelete={deletePost(post.id)}
+            onDelete={deletePost(postData.id)}
           >
             Delete post
           </OptionsMenu>
         </Flex>
 
-        <MatchDetails post={post} />
+        <MatchDetails post={postData} />
 
         <Flex gap="5" align="center">
           <Flex direction="column" className="flex-1">
@@ -141,7 +159,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
               Competition
             </Text>
             <Text as="div" size="2">
-              {post.match.competition}
+              {postData.match.competition}
             </Text>
           </Flex>
           <Flex direction="column" className="flex-1">
@@ -149,23 +167,23 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
               Ground name
             </Text>
             <Text as="div" size="2">
-              {post.match.stadium}
+              {postData.match.stadium}
             </Text>
           </Flex>
         </Flex>
 
-        <PostContent content={post.content} />
+        <PostContent content={postData.content} />
 
         <Flex align="stretch" justify="between" className="">
           <Popover.Root>
             <Popover.Trigger>
               <Text color={'gray'} size={'1'}>
-                {post.likes.length} likes
+                {postData.likes.length} likes
               </Text>
             </Popover.Trigger>
             <Popover.Content>
               <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-                {post.likes.map((like) => (
+                {postData.likes.map((like) => (
                   <div key={like.id}>
                     <Text as="div" size="1" color="gray">
                       {like.user.name}
@@ -182,7 +200,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <Text color={'gray'} size={'1'}>
-              {post.comments.length} comments
+              {postData.comments.length} comments
             </Text>
           </Button>
         </Flex>
@@ -201,7 +219,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
         <div>
           <Separator my="3" size="4" />
           <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-            {post.comments.map((comment) => (
+            {postData.comments.map((comment) => (
               <Comment
                 comment={comment}
                 sessionUserId={session.data?.user.id}
