@@ -99,16 +99,24 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   };
 
   const deleteComment = (commentId: string) => async () => {
-    console.log('delete comment');
-    const res = await fetch(`/api/posts/${postData.id}/comment/`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ commentId }),
-    });
-    console.log('deleted comment');
-    location.reload();
+    try {
+      const res = await fetch(`/api/posts/${postData.id}/comment/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentId }),
+      });
+      if (res.ok) {
+        const updatedPostResponse = await fetch(`/api/posts/${post.id}`);
+        const updatedPostData = await updatedPostResponse.json();
+        setPostData(updatedPostData);
+      } else {
+        console.error('Failed to delete comment');
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
   };
 
   const deletePost = (postId: string) => async () => {
