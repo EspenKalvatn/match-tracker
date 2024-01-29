@@ -32,7 +32,12 @@ import CommentForm, {
 
 type CommentForm = z.infer<typeof createCommentSchema>;
 
-const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
+interface PostComponentProps {
+  post: Post;
+  updatePosts: (updatedPosts: Post[]) => void;
+}
+
+const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
   const router = useRouter();
   const session = useSession();
   const user = session.data?.user;
@@ -120,13 +125,22 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   };
 
   const deletePost = (postId: string) => async () => {
-    const res = await fetch(`/api/posts/${postId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    location.reload();
+    try {
+      const res = await fetch(`/api/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.ok) {
+        // Fetch updated posts and call the updatePosts function
+        const updatedPostsResponse = await fetch('/api/posts');
+        const updatedPosts = await updatedPostsResponse.json();
+        updatePosts(updatedPosts);
+      } else {
+        console.error('Failed to delete post');
+      }
+    } catch (error) {}
   };
 
   const {
