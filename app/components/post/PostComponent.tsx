@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Popover,
-  Separator,
-  Text,
-  TextField,
-} from '@radix-ui/themes';
+import { Button, Card, Flex, Popover, Separator, Text } from '@radix-ui/themes';
 
-import { AiOutlineSend } from 'react-icons/ai';
 import { Post } from '@/app/types/Post';
 import { createCommentSchema } from '@/app/validationSchemas';
 import { useSession } from 'next-auth/react';
@@ -240,7 +229,12 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
       {isExpanded && (
         <div>
           <Separator my="3" size="4" />
-          <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
+          <Flex
+            direction="column"
+            gap="3"
+            style={{ maxWidth: 500 }}
+            className={'pb-4'}
+          >
             {postData.comments.map((comment) => (
               <Comment
                 comment={comment}
