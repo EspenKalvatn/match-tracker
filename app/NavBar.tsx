@@ -50,10 +50,10 @@ const NavBar = () => {
       <Flex gap={'3'} justify={'end'} align={'center'} className="flex-1">
         <Popover.Root>
           <Popover.Trigger>
-            <Button variant={'ghost'} color={'gray'}>
+            <Button variant={'ghost'}>
               <Avatar
-                size="2"
-                src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+                size="3"
+                src=""
                 radius="full"
                 fallback={session.data?.user.name[0]}
               />
