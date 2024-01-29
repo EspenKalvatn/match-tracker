@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Flex } from '@radix-ui/themes';
-import PostComponent from '../app/components/PostComponent';
+import PostComponent from './components/post/PostComponent';
 import { useQuery } from '@tanstack/react-query';
 import { Post } from '@/app/types/Post';
 

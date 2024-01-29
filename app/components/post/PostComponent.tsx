@@ -23,6 +23,10 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import PostHeader from '@/app/components/post/PostHeader';
+import MatchDetails from '@/app/components/post/MatchDetails';
+import PostContent from '@/app/components/post/PostContent';
+import PostActions from '@/app/components/post/PostActions';
 
 // Function to calculate the time difference
 const getTimeAgo = (createdAt: string): string => {
@@ -97,22 +101,8 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
     <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
         <Flex justify={'between'}>
-          <Flex gap="5" align="center">
-            <Avatar
-              size="3"
-              src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
-              radius="full"
-              fallback="T"
-            />
-            <Box className="">
-              <Text as="div" size="2" weight="bold">
-                {post.user.name}
-              </Text>
-              <Text as="div" size="1" color="gray">
-                {getTimeAgo(post.createdAt)}
-              </Text>
-            </Box>
-          </Flex>
+          <PostHeader user={post.user} createdAt={getTimeAgo(post.createdAt)} />
+
           <Popover.Root>
             <Popover.Trigger>
               <Button variant="ghost" color={'gray'}>
@@ -137,22 +127,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
           </Popover.Root>
         </Flex>
 
-        <Flex gap="5" align="center">
-          <Text as="div" size="2" color="gray">
-            {new Date(post.match.date).toLocaleDateString('en-GB')}
-          </Text>
-
-          <Flex direction="column" className="flex-1">
-            <TeamAndScore
-              team={post.match.homeTeam}
-              score={post.match.homeScore}
-            />
-            <TeamAndScore
-              team={post.match.awayTeam}
-              score={post.match.awayScore}
-            />
-          </Flex>
-        </Flex>
+        <MatchDetails post={post} />
 
         <Flex gap="5" align="center">
           <Flex direction="column" className="flex-1">
@@ -172,9 +147,8 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
             </Text>
           </Flex>
         </Flex>
-        <Text as="div" size="2" className={'pt-5'}>
-          {post.content}
-        </Text>
+
+        <PostContent content={post.content} />
 
         <Flex align="stretch" justify="between" className="">
           <Popover.Root>
@@ -209,30 +183,12 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
 
         <Separator my="0" size="4" />
 
-        <Flex align="stretch" justify="between" className="">
-          <Button
-            variant="ghost"
-            color={isLiked ? 'blue' : 'gray'}
-            size="3"
-            onClick={handleLike}
-          >
-            <AiOutlineLike />
-            <Text as="div" size="1">
-              Like
-            </Text>
-          </Button>
-          <Button
-            variant="ghost"
-            color="gray"
-            size="3"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            <AiOutlineComment />
-            <Text as="div" size="1">
-              Comment
-            </Text>
-          </Button>
-        </Flex>
+        <PostActions
+          handleLike={handleLike}
+          isLiked={isLiked}
+          isExpanded={isExpanded}
+          setIsExpanded={setIsExpanded}
+        />
       </Flex>
 
       {isExpanded && (
@@ -339,21 +295,3 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   );
 };
 export default PostComponent;
-
-const TeamAndScore: React.FC<{ team: string; score: number }> = ({
-  team,
-  score,
-}) => {
-  return (
-    <Flex justify="between">
-      <Flex gap="2" align="center">
-        <Text as="div" size="3">
-          {team}
-        </Text>
-      </Flex>
-      <Text as="div" size="3">
-        {score}
-      </Text>
-    </Flex>
-  );
-};
