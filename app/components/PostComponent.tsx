@@ -93,17 +93,6 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
     resolver: zodResolver(createCommentSchema),
   });
 
-  const addComment = async (content: string) => {
-    const res = await fetch(`/api/posts/${post.id}/comment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content }),
-    });
-    // TODO: Maybe refresh page?
-  };
-
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
@@ -322,7 +311,7 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
               } catch (error) {
                 console.log(error);
               }
-              console.log('submitted');
+              location.reload();
             })}
           >
             <Flex gap="3" justify={'between'} align={'center'}>
