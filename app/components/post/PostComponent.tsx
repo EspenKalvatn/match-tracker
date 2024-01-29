@@ -48,26 +48,26 @@ const PostComponent: React.FC<{ post: Post }> = ({ post }) => {
   }, [post]);
 
   const handleLike = async () => {
-    if (isLiked) {
-      const res = await fetch(`/api/posts/${postData.id}/like`, {
-        method: 'DELETE',
+    try {
+      const res = await fetch(`/api/posts/${post.id}/like`, {
+        method: isLiked ? 'DELETE' : 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      setIsLiked(false);
-    } else {
-      const res = await fetch(`/api/posts/${postData.id}/like`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+
       if (res.ok) {
-        setIsLiked(true);
+        const updatedPostResponse = await fetch(`/api/posts/${post.id}`);
+        const updatedPostData = await updatedPostResponse.json();
+
+        setIsLiked(!isLiked);
+        setPostData(updatedPostData);
+      } else {
+        console.error('Failed to update like');
       }
+    } catch (error) {
+      console.error('Error updating like:', error);
     }
-    location.reload();
   };
 
   const handleCommentSubmit = async (data: CommentFormData) => {
