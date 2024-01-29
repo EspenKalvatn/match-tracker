@@ -24,12 +24,24 @@ export async function DELETE(
       return NextResponse.json('Unauthorized', { status: 401 });
     }
 
-    const deletedPost = await prisma.post.delete({
-      where: {
-        id: params.id,
-      },
-    });
-    return NextResponse.json(deletedPost, { status: 200 });
+    const result = await prisma.$transaction([
+      prisma.comment.deleteMany({
+        where: {
+          postId: params.id,
+        },
+      }),
+      prisma.like.deleteMany({
+        where: {
+          postId: params.id,
+        },
+      }),
+      prisma.post.delete({
+        where: {
+          id: params.id,
+        },
+      }),
+    ]);
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error('Error deleting post:', error);
     return NextResponse.json({ status: 500, error: 'Internal Server Error' });
