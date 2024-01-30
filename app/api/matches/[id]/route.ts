@@ -10,6 +10,14 @@ export async function GET(
       where: {
         id: params.id,
       },
+      include: {
+        user: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
     });
     if (!match) {
       return NextResponse.json({ status: 404, error: 'Resource not found' });

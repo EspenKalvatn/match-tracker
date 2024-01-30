@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex, Text } from '@radix-ui/themes';
-import { Post } from '@/app/types/Post';
+import { Match } from '@/app/types/Match';
 
 const TeamAndScore: React.FC<{ team: string; score: number }> = ({
   team,
@@ -18,14 +18,14 @@ const TeamAndScore: React.FC<{ team: string; score: number }> = ({
   </Flex>
 );
 
-const MatchDetails: React.FC<{ post: Post }> = ({ post }) => (
+const MatchDetails: React.FC<{ match: Match }> = ({ match }) => (
   <Flex gap="5" align="center">
     <Text as="div" size="2" color="gray">
-      {new Date(post.match.date).toLocaleDateString('en-GB')}
+      {new Date(match.date).toLocaleDateString('en-GB')}
     </Text>
     <Flex direction="column" className="flex-1">
-      <TeamAndScore team={post.match.homeTeam} score={post.match.homeScore} />
-      <TeamAndScore team={post.match.awayTeam} score={post.match.awayScore} />
+      <TeamAndScore team={match.homeTeam} score={match.homeScore} />
+      <TeamAndScore team={match.awayTeam} score={match.awayScore} />
     </Flex>
   </Flex>
 );

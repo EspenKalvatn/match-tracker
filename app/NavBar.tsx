@@ -7,7 +7,14 @@ import { AiOutlineUser } from 'react-icons/ai';
 
 import { usePathname } from 'next/navigation';
 import classnames from 'classnames';
-import { Avatar, Button, Flex, Popover, Text } from '@radix-ui/themes';
+import {
+  AlertDialog,
+  Avatar,
+  Button,
+  Flex,
+  Popover,
+  Text,
+} from '@radix-ui/themes';
 import { signOut, useSession } from 'next-auth/react';
 
 const NavBar = () => {
@@ -70,9 +77,47 @@ const NavBar = () => {
               <Text size={'2'} color={'gray'}>
                 role: {session.data?.user.role}
               </Text>
-              <Button variant={'ghost'} color={'red'}>
-                DELETE ACCOUNT
-              </Button>
+
+              <AlertDialog.Root>
+                <AlertDialog.Trigger>
+                  <Button color="red" variant={'ghost'}>
+                    DELETE ACCOUNT
+                  </Button>
+                </AlertDialog.Trigger>
+                <AlertDialog.Content style={{ maxWidth: 450 }}>
+                  <AlertDialog.Title>DELETE ACCOUNT</AlertDialog.Title>
+                  <AlertDialog.Description size="2">
+                    Are you sure? All user data will be deleted as well.
+                  </AlertDialog.Description>
+
+                  <Flex gap="3" mt="4" justify="end">
+                    <AlertDialog.Cancel>
+                      <Button variant="soft" color="gray">
+                        Cancel
+                      </Button>
+                    </AlertDialog.Cancel>
+                    <AlertDialog.Action>
+                      <Button
+                        variant="solid"
+                        color="red"
+                        onClick={async () => {
+                          const response = await fetch(
+                            `/api/users/${session.data?.user.id}`,
+                            {
+                              method: 'DELETE',
+                            },
+                          );
+                          if (response.ok) {
+                            await signOut();
+                          }
+                        }}
+                      >
+                        Delete account
+                      </Button>
+                    </AlertDialog.Action>
+                  </Flex>
+                </AlertDialog.Content>
+              </AlertDialog.Root>
               <Button variant={'ghost'} color={'red'} onClick={() => signOut()}>
                 SIGN OUT
               </Button>

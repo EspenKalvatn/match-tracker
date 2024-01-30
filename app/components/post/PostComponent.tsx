@@ -18,6 +18,7 @@ import Comment from '@/app/components/post/Comment';
 import CommentForm, {
   CommentFormData,
 } from '@/app/components/post/CommentForm';
+import AdditionalMatchDetails from '@/app/components/post/AdditionalMatchDetails';
 
 type CommentForm = z.infer<typeof createCommentSchema>;
 
@@ -141,11 +142,6 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
     resolver: zodResolver(createCommentSchema),
   });
 
-  if (postData.id === '65b5849531f9589fb66e0fe9') {
-    console.log('post', post);
-    console.log('comments', postData.comments.length);
-  }
-
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
@@ -163,26 +159,9 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
           </OptionsMenu>
         </Flex>
 
-        <MatchDetails post={postData} />
+        <MatchDetails match={postData.match} />
 
-        <Flex gap="5" align="center">
-          <Flex direction="column" className="flex-1">
-            <Text as="div" size="1" color="gray">
-              Competition
-            </Text>
-            <Text as="div" size="2">
-              {postData.match.competition}
-            </Text>
-          </Flex>
-          <Flex direction="column" className="flex-1">
-            <Text as="div" size="1" color="gray">
-              Ground name
-            </Text>
-            <Text as="div" size="2">
-              {postData.match.stadium}
-            </Text>
-          </Flex>
-        </Flex>
+        <AdditionalMatchDetails match={postData.match} />
 
         <PostContent content={postData.content} />
 

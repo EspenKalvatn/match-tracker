@@ -19,7 +19,7 @@ model Match {
   date        String
   stadium     String
   competition String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String   @db.ObjectId
   posts       Post[]   @relation("MatchPosts")
   createdAt   DateTime @default(now())

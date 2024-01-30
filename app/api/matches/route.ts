@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     if (!validation.success)
       return NextResponse.json(validation.error.errors, { status: 400 });
 
-    const newIssue = await prisma.match.create({
+    const match = await prisma.match.create({
       data: {
         homeTeam: body.homeTeam,
         awayTeam: body.awayTeam,
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(newIssue, { status: 201 });
+    return NextResponse.json(match, { status: 201 });
   } catch (error) {
     console.error('Error creating match:', error);
     return NextResponse.json({ status: 500, error: 'Internal Server Error' });
