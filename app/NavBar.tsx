@@ -70,8 +70,10 @@ const NavBar = () => {
               <Text size={'2'} color={'gray'}>
                 role: {session.data?.user.role}
               </Text>
-              <Button>Go to profile</Button>
-              <Button color={'red'} onClick={() => signOut()}>
+              <Button variant={'ghost'} color={'red'}>
+                DELETE ACCOUNT
+              </Button>
+              <Button variant={'ghost'} color={'red'} onClick={() => signOut()}>
                 SIGN OUT
               </Button>
             </Flex>

@@ -48,10 +48,6 @@ export async function GET(
       return NextResponse.json('Post not found', { status: 404 });
     }
 
-    if (post.userId !== session?.user.id) {
-      return NextResponse.json('Unauthorized', { status: 401 });
-    }
-
     return NextResponse.json(post, { status: 200 });
   } catch (error) {
     console.error('Error fetching post:', error);

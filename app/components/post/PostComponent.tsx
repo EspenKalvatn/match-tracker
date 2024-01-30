@@ -27,7 +27,6 @@ interface PostComponentProps {
 }
 
 const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
-  const router = useRouter();
   const session = useSession();
   const user = session.data?.user;
   const [postData, setPostData] = useState(post);
@@ -35,7 +34,6 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
   const [isLiked, setIsLiked] = useState(
     postData.likes.map((like) => like.userId).includes(user?.id),
   );
-  const [likeCount, setLikeCount] = useState(postData.likes.length);
 
   useEffect(() => {
     // Update the component state with the initial post data
