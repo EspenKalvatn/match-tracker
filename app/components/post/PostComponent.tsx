@@ -35,6 +35,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
   const [isLiked, setIsLiked] = useState(
     postData.likes.map((like) => like.userId).includes(user?.id),
   );
+  const [likeCount, setLikeCount] = useState(postData.likes.length);
 
   useEffect(() => {
     // Update the component state with the initial post data
@@ -43,6 +44,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
 
   const handleLike = async () => {
     try {
+      setIsLiked(!isLiked);
       const res = await fetch(`/api/posts/${post.id}/like`, {
         method: isLiked ? 'DELETE' : 'POST',
         headers: {
@@ -54,12 +56,13 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
         const updatedPostResponse = await fetch(`/api/posts/${post.id}`);
         const updatedPostData = await updatedPostResponse.json();
 
-        setIsLiked(!isLiked);
         setPostData(updatedPostData);
       } else {
         console.error('Failed to update like');
+        setIsLiked(!isLiked);
       }
     } catch (error) {
+      setIsLiked(!isLiked);
       console.error('Error updating like:', error);
     }
   };
