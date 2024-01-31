@@ -36,10 +36,15 @@ export const loginSchema = z.object({
 });
 
 // TODO: Add proper validation
+// TODO: Maybe have one that extends this to be used in the backend
 export const createPostSchema = z.object({
   content: z.string(),
-  likes: z.array(z.string()),
-  comments: z.array(z.string()),
-  userId: z.string(),
-  matchId: z.string(),
+  // likes: z.array(z.string()),
+  // comments: z.array(z.string()),
+  // userId: z.string(),
+  // matchId: z.string(),
+});
+
+export const createCommentSchema = z.object({
+  content: z.string(),
 });
