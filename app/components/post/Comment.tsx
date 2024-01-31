@@ -33,7 +33,7 @@ const Comment: React.FC<CommentProps> = ({
         <OptionsMenu
           userId={comment.userId}
           currentUserId={sessionUserId}
-          onDelete={() => deleteComment(comment.id)} // Correct the usage here
+          onDelete={() => deleteComment(comment.id)}
         >
           Delete comment
         </OptionsMenu>

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import React from 'react';
 import { GiSoccerField } from 'react-icons/gi';
-import { AiOutlineUser } from 'react-icons/ai';
 
 import { usePathname } from 'next/navigation';
 import classnames from 'classnames';

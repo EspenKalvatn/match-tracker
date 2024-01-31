@@ -1,9 +1,15 @@
 import prisma from '@/prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
-import { createUserSchema } from '@/app/validationSchemas';
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/lib/auth';
 
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+    const isAdmin = session?.user.role === 'ADMIN';
+    if (!isAdmin) {
+      return NextResponse.json({ status: 403, error: 'Forbidden' });
+    }
     const users = await prisma.user.findMany();
     return NextResponse.json(users, { status: 200 });
   } catch (error) {

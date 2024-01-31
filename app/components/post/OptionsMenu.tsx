@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Button, Flex, Popover } from '@radix-ui/themes';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
-import { log } from 'node:util';
 
 interface OptionsMenuProps {
   userId: string | undefined;

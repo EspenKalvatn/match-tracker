@@ -1,11 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Callout,
   Card,
   Flex,
-  Text,
   TextArea,
   TextField,
 } from '@radix-ui/themes';
@@ -42,12 +41,7 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
     },
   });
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors: errorsPost },
-  } = useForm<PostForm>({
+  const { register, handleSubmit } = useForm<PostForm>({
     resolver: zodResolver(createPostSchema),
   });
 
@@ -86,7 +80,7 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
               console.log('submitted post', post);
             } catch (error) {
               setIsSubmitting(false);
-              setError('An unexpected error occured');
+              setError('An unexpected error occurred');
             }
             setIsSubmitting(false);
             router.push('/');

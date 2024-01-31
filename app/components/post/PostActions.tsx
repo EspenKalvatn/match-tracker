@@ -16,7 +16,6 @@ const PostActions: React.FC<PostActionsProps> = ({
   setIsExpanded,
 }) => (
   <Flex align="stretch" justify="between" className="">
-    {/* Like Button */}
     <Button
       variant="ghost"
       color={isLiked ? 'blue' : 'gray'}
@@ -29,7 +28,6 @@ const PostActions: React.FC<PostActionsProps> = ({
       </Text>
     </Button>
 
-    {/* Comment Button */}
     <Button
       variant="ghost"
       color="gray"

@@ -14,12 +14,7 @@ export type CommentFormData = {
 };
 
 const CommentForm: React.FC<CommentFormProps> = ({ onSubmit }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<CommentFormData>({
+  const { register, handleSubmit, reset } = useForm<CommentFormData>({
     resolver: zodResolver(createCommentSchema),
   });
   return (
@@ -27,15 +22,13 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit }) => {
       onSubmit={handleSubmit(async (data) => {
         try {
           await onSubmit(data);
-          reset(); // Pass the reset function to the onSubmit callback
+          reset();
         } catch (error) {
           console.error(error);
         }
       })}
     >
-      {/* Form Content */}
       <Flex gap="3" justify={'between'} align={'center'}>
-        {/* ... Other form elements ... */}
         <Avatar size="2" src="" radius="full" fallback={'?'} />
         <TextField.Root className={'w-full'}>
           <TextField.Input

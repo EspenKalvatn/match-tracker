@@ -8,6 +8,7 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
+    const session = await getServerSession(authOptions);
     const user = await prisma.user.findUnique({
       where: {
         id: params.id,
@@ -15,6 +16,12 @@ export async function GET(
     });
     if (!user) {
       return NextResponse.json({ status: 404, error: 'Resource not found' });
+    }
+    if (user.id !== session?.user.id && session?.user.role !== 'admin') {
+      return NextResponse.json({
+        status: 401,
+        error: 'You are not authorized to view this resource',
+      });
     }
 
     return NextResponse.json(user, { status: 200 });

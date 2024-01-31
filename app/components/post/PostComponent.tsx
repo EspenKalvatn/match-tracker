@@ -2,12 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Flex, Popover, Separator, Text } from '@radix-ui/themes';
 
 import { Post } from '@/app/types/Post';
-import { createCommentSchema } from '@/app/validationSchemas';
 import { useSession } from 'next-auth/react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import PostHeader from '@/app/components/post/PostHeader';
 import MatchDetails from '@/app/components/post/MatchDetails';
 import PostContent from '@/app/components/post/PostContent';
@@ -19,8 +14,6 @@ import CommentForm, {
   CommentFormData,
 } from '@/app/components/post/CommentForm';
 import AdditionalMatchDetails from '@/app/components/post/AdditionalMatchDetails';
-
-type CommentForm = z.infer<typeof createCommentSchema>;
 
 interface PostComponentProps {
   post: Post;
@@ -37,7 +30,6 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
   );
 
   useEffect(() => {
-    // Update the component state with the initial post data
     setPostData(post);
   }, [post]);
 
@@ -79,13 +71,11 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
       if (res.ok) {
         console.log('Comment submitted successfully');
 
-        // Fetch the updated post data
         const updatedPostResponse = await fetch(`/api/posts/${postData.id}`);
         const updatedPostData = await updatedPostResponse.json();
 
-        // Update the component state with the new post data
         setPostData(updatedPostData);
-        setIsExpanded(true); // Optionally, expand the comment section
+        setIsExpanded(true);
       } else {
         console.error('Failed to submit comment');
       }
@@ -124,7 +114,6 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
         },
       });
       if (res.ok) {
-        // Fetch updated posts and call the updatePosts function
         const updatedPostsResponse = await fetch('/api/posts');
         const updatedPosts = await updatedPostsResponse.json();
         updatePosts(updatedPosts);
@@ -133,14 +122,6 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
       }
     } catch (error) {}
   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CommentForm>({
-    resolver: zodResolver(createCommentSchema),
-  });
 
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
