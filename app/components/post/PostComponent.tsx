@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Flex, Popover, Separator, Text } from '@radix-ui/themes';
 
 import { Post } from '@/app/types/Post';
@@ -14,43 +14,97 @@ import CommentForm, {
   CommentFormData,
 } from '@/app/components/post/CommentForm';
 import AdditionalMatchDetails from '@/app/components/post/AdditionalMatchDetails';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  commentPost,
+  deleteCommentPost,
+  deletePost,
+  likePost,
+  unlikePost,
+} from '@/app/api';
 
 interface PostComponentProps {
   post: Post;
-  updatePosts: (updatedPosts: Post[]) => void;
 }
 
-const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
+const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
   const session = useSession();
   const user = session.data?.user;
-  const [postData, setPostData] = useState(post);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLiked, setIsLiked] = useState(
-    postData.likes.map((like) => like.userId).includes(user?.id),
+    post.likes.map((like) => like.userId).includes(user?.id),
   );
 
-  useEffect(() => {
-    setPostData(post);
-  }, [post]);
+  const queryClient = useQueryClient();
+
+  const { mutate: likePostMutation } = useMutation({
+    mutationFn: (postId: string) => likePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] }).catch((err) => {
+        // TODO: Handle error
+      });
+    },
+    onMutate: () => {
+      // TODO: Do something
+    },
+  });
+
+  const { mutate: unlikePostMutation } = useMutation({
+    mutationFn: (postId: string) => unlikePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] }).catch((err) => {
+        // TODO: Handle error
+      });
+    },
+    onMutate: () => {
+      // TODO: Do something
+    },
+  });
+
+  const { mutate: deletePostMutation } = useMutation({
+    mutationFn: (postId: string) => deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] }).catch((err) => {
+        // TODO: Handle error
+      });
+    },
+    onMutate: () => {
+      // TODO: Do something
+    },
+  });
+
+  const { mutate: deleteCommentMutation } = useMutation({
+    mutationFn: (commentId: string) => deleteCommentPost(post.id, commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] }).catch((err) => {
+        // TODO: Handle error
+      });
+    },
+    onMutate: () => {
+      // TODO: Do something
+    },
+  });
+
+  const { mutate: commentMutation } = useMutation({
+    mutationFn: (data: CommentFormData) => commentPost(post.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] }).catch((err) => {
+        // TODO: Handle error
+      });
+    },
+    onMutate: () => {
+      // TODO: Do something
+    },
+  });
 
   const handleLike = async () => {
     try {
-      setIsLiked(!isLiked);
-      const res = await fetch(`/api/posts/${post.id}/like`, {
-        method: isLiked ? 'DELETE' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (res.ok) {
-        const updatedPostResponse = await fetch(`/api/posts/${post.id}`);
-        const updatedPostData = await updatedPostResponse.json();
-
-        setPostData(updatedPostData);
+      if (isLiked) {
+        setIsLiked(false);
+        unlikePostMutation(post.id);
       } else {
-        console.error('Failed to update like');
-        setIsLiked(!isLiked);
+        setIsLiked(true);
+        likePostMutation(post.id);
       }
     } catch (error) {
       setIsLiked(!isLiked);
@@ -58,104 +112,48 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
     }
   };
 
-  const handleCommentSubmit = async (data: CommentFormData) => {
-    try {
-      const res = await fetch(`/api/posts/${postData.id}/comment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: data.content }),
-      });
-
-      if (res.ok) {
-        console.log('Comment submitted successfully');
-
-        const updatedPostResponse = await fetch(`/api/posts/${postData.id}`);
-        const updatedPostData = await updatedPostResponse.json();
-
-        setPostData(updatedPostData);
-        setIsExpanded(true);
-      } else {
-        console.error('Failed to submit comment');
-      }
-    } catch (error) {
-      console.error('Error submitting comment:', error);
-    }
+  const handleComment = async (data: CommentFormData) => {
+    commentMutation(data);
   };
 
-  const deleteComment = (commentId: string) => async () => {
-    try {
-      const res = await fetch(`/api/posts/${postData.id}/comment/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ commentId }),
-      });
-      if (res.ok) {
-        const updatedPostResponse = await fetch(`/api/posts/${post.id}`);
-        const updatedPostData = await updatedPostResponse.json();
-        setPostData(updatedPostData);
-      } else {
-        console.error('Failed to delete comment');
-      }
-    } catch (error) {
-      console.error('Error deleting comment:', error);
-    }
+  const handleDeleteComment = (commentId: string) => async () => {
+    deleteCommentMutation(commentId);
   };
 
-  const deletePost = (postId: string) => async () => {
-    try {
-      const res = await fetch(`/api/posts/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (res.ok) {
-        const updatedPostsResponse = await fetch('/api/posts');
-        const updatedPosts = await updatedPostsResponse.json();
-        updatePosts(updatedPosts);
-      } else {
-        console.error('Failed to delete post');
-      }
-    } catch (error) {}
+  const handleDeletePost = () => async () => {
+    deletePostMutation(post.id);
   };
 
   return (
     <Card style={{ width: 500 }} className={'p-4'}>
       <Flex gap="3" direction="column">
         <Flex justify={'between'}>
-          <PostHeader
-            user={postData.user}
-            createdAt={getTimeAgo(postData.createdAt)}
-          />
+          <PostHeader user={post.user} createdAt={getTimeAgo(post.createdAt)} />
           <OptionsMenu
-            userId={postData.userId}
+            userId={post.userId}
             currentUserId={session.data?.user.id}
-            onDelete={deletePost(postData.id)}
+            onDelete={handleDeletePost}
           >
             Delete post
           </OptionsMenu>
         </Flex>
 
-        <MatchDetails match={postData.match} />
+        <MatchDetails match={post.match} />
 
-        <AdditionalMatchDetails match={postData.match} />
+        <AdditionalMatchDetails match={post.match} />
 
-        <PostContent content={postData.content} />
+        <PostContent content={post.content} />
 
         <Flex align="stretch" justify="between" className="">
           <Popover.Root>
             <Popover.Trigger>
               <Text color={'gray'} size={'1'}>
-                {postData.likes.length} likes
+                {post.likes.length} likes
               </Text>
             </Popover.Trigger>
             <Popover.Content>
               <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
-                {postData.likes.map((like) => (
+                {post.likes.map((like) => (
                   <div key={like.id}>
                     <Text as="div" size="1" color="gray">
                       {like.user.name}
@@ -172,7 +170,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <Text color={'gray'} size={'1'}>
-              {postData.comments.length} comments
+              {post.comments.length} comments
             </Text>
           </Button>
         </Flex>
@@ -196,15 +194,15 @@ const PostComponent: React.FC<PostComponentProps> = ({ post, updatePosts }) => {
             style={{ maxWidth: 500 }}
             className={'pb-4'}
           >
-            {postData.comments.map((comment) => (
+            {post.comments.map((comment) => (
               <Comment
                 comment={comment}
                 sessionUserId={session.data?.user.id}
-                deleteComment={deleteComment(comment.id)}
+                deleteComment={handleDeleteComment(comment.id)}
               />
             ))}
           </Flex>
-          <CommentForm onSubmit={handleCommentSubmit} />
+          <CommentForm onSubmit={handleComment} />
         </div>
       )}
     </Card>
