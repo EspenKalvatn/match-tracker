@@ -98,7 +98,7 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
                 {...register('content')}
               />
             </TextField.Root>
-            <Flex justify={'end'} gap={'3'}>
+            <Flex justify={'end'} gap={'3'} align={'center'}>
               <div>
                 <Button
                   type={'button'}
@@ -114,8 +114,8 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
               <div>
                 <Button
                   type={'submit'}
+                  variant={'solid'}
                   disabled={isSubmitting}
-                  onClick={() => console.log('publish')}
                 >
                   Publish
                   {isSubmitting && <Spinner />}
