@@ -109,7 +109,11 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
               >
                 Cancel
               </Button>
-              <Button type={'submit'} disabled={isSubmitting}>
+              <Button
+                type={'submit'}
+                disabled={isSubmitting}
+                onClick={() => console.log('publish')}
+              >
                 Publish
                 {isSubmitting && <Spinner />}
               </Button>
