@@ -79,9 +79,11 @@ const NavBar = () => {
 
               <AlertDialog.Root>
                 <AlertDialog.Trigger>
-                  <Button color="red" variant={'ghost'}>
-                    DELETE ACCOUNT
-                  </Button>
+                  <div>
+                    <Button color="red" variant={'ghost'}>
+                      DELETE ACCOUNT
+                    </Button>
+                  </div>
                 </AlertDialog.Trigger>
                 <AlertDialog.Content style={{ maxWidth: 450 }}>
                   <AlertDialog.Title>DELETE ACCOUNT</AlertDialog.Title>
