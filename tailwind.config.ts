@@ -1,4 +1,5 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
+const { mauve, violet, red, blackA } = require('@radix-ui/colors');
 
 const config: Config = {
   content: [
@@ -8,6 +9,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        ...mauve,
+        ...violet,
+        ...red,
+        ...blackA,
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
@@ -16,5 +23,5 @@ const config: Config = {
     },
   },
   plugins: [],
-}
-export default config
+};
+export default config;

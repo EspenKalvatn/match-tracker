@@ -91,14 +91,12 @@ const NavBar = () => {
 
                   <Flex gap="3" mt="4" justify="end">
                     <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
+                      <button className="text-mauve11 bg-mauve4 hover:bg-mauve5 focus:shadow-mauve7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
                         Cancel
-                      </Button>
+                      </button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                      <Button
-                        variant="solid"
-                        color="red"
+                      <button
                         onClick={async () => {
                           const response = await fetch(
                             `/api/users/${session.data?.user.id}`,
@@ -110,9 +108,27 @@ const NavBar = () => {
                             await signOut();
                           }
                         }}
+                        className="text-red11 bg-red4 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
                       >
-                        Delete account
-                      </Button>
+                        Yes, delete account
+                      </button>
+                      {/*<Button*/}
+                      {/*  variant="solid"*/}
+                      {/*  color="red"*/}
+                      {/*  onClick={async () => {*/}
+                      {/*    const response = await fetch(*/}
+                      {/*      `/api/users/${session.data?.user.id}`,*/}
+                      {/*      {*/}
+                      {/*        method: 'DELETE',*/}
+                      {/*      },*/}
+                      {/*    );*/}
+                      {/*    if (response.ok) {*/}
+                      {/*      await signOut();*/}
+                      {/*    }*/}
+                      {/*  }}*/}
+                      {/*>*/}
+                      {/*  Delete account*/}
+                      {/*</Button>*/}
                     </AlertDialog.Action>
                   </Flex>
                 </AlertDialog.Content>
