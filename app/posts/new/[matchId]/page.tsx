@@ -115,10 +115,11 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
                 <Button
                   type={'submit'}
                   variant={'solid'}
+                  color={'green'}
                   disabled={isSubmitting}
                 >
                   Publish
-                  {/*{isSubmitting && <Spinner />}*/}
+                  {isSubmitting && <Spinner />}
                 </Button>
               </div>
             </Flex>
