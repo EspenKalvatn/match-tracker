@@ -196,6 +196,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
           >
             {post.comments.map((comment) => (
               <Comment
+                key={comment.id}
                 comment={comment}
                 sessionUserId={session.data?.user.id}
                 deleteComment={handleDeleteComment(comment.id)}
