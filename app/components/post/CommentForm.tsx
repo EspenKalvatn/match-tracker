@@ -28,7 +28,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit }) => {
         }
       })}
     >
-      <Flex gap="3" justify={'between'} align={'center'}>
+      <Flex gap="3" justify={'between'} align={'end'}>
         <Avatar size="2" src="" radius="full" fallback={'?'} />
         <TextField.Root className={'w-full'}>
           <TextField.Input
@@ -37,9 +37,11 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit }) => {
           />
         </TextField.Root>
 
-        <Button variant={'ghost'} color={'gray'} type="submit">
-          <AiOutlineSend />{' '}
-        </Button>
+        <div>
+          <Button variant={'ghost'} color={'gray'} type="submit">
+            <AiOutlineSend />{' '}
+          </Button>
+        </div>
       </Flex>
     </form>
   );

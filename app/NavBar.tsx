@@ -56,14 +56,16 @@ const NavBar = () => {
       <Flex gap={'3'} justify={'end'} align={'center'} className="flex-1">
         <Popover.Root>
           <Popover.Trigger>
-            <Button variant={'ghost'}>
-              <Avatar
-                size="3"
-                src=""
-                radius="full"
-                fallback={session.data?.user.name[0]}
-              />
-            </Button>
+            <div>
+              <Button variant={'ghost'}>
+                <Avatar
+                  size="3"
+                  src=""
+                  radius="full"
+                  fallback={session.data?.user.name[0]}
+                />
+              </Button>
+            </div>
           </Popover.Trigger>
           <Popover.Content>
             <Flex gap={'3'} direction={'column'}>
@@ -91,53 +93,47 @@ const NavBar = () => {
                     Are you sure? All user data will be deleted as well.
                   </AlertDialog.Description>
 
-                  <Flex gap="3" mt="4" justify="end">
+                  <Flex gap="3" mt="4" justify="end" align={'center'}>
                     <AlertDialog.Cancel>
-                      <button className="text-mauve11 bg-mauve4 hover:bg-mauve5 focus:shadow-mauve7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
-                        Cancel
-                      </button>
+                      <div>
+                        <Button variant="soft" color="gray">
+                          Cancel
+                        </Button>
+                      </div>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                      <button
-                        onClick={async () => {
-                          const response = await fetch(
-                            `/api/users/${session.data?.user.id}`,
-                            {
-                              method: 'DELETE',
-                            },
-                          );
-                          if (response.ok) {
-                            await signOut();
-                          }
-                        }}
-                        className="text-red11 bg-red4 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
-                      >
-                        Yes, delete account
-                      </button>
-                      {/*<Button*/}
-                      {/*  variant="solid"*/}
-                      {/*  color="red"*/}
-                      {/*  onClick={async () => {*/}
-                      {/*    const response = await fetch(*/}
-                      {/*      `/api/users/${session.data?.user.id}`,*/}
-                      {/*      {*/}
-                      {/*        method: 'DELETE',*/}
-                      {/*      },*/}
-                      {/*    );*/}
-                      {/*    if (response.ok) {*/}
-                      {/*      await signOut();*/}
-                      {/*    }*/}
-                      {/*  }}*/}
-                      {/*>*/}
-                      {/*  Delete account*/}
-                      {/*</Button>*/}
+                      <div>
+                        <Button
+                          variant="solid"
+                          color="red"
+                          onClick={async () => {
+                            const response = await fetch(
+                              `/api/users/${session.data?.user.id}`,
+                              {
+                                method: 'DELETE',
+                              },
+                            );
+                            if (response.ok) {
+                              await signOut();
+                            }
+                          }}
+                        >
+                          Delete account
+                        </Button>
+                      </div>
                     </AlertDialog.Action>
                   </Flex>
                 </AlertDialog.Content>
               </AlertDialog.Root>
-              <Button variant={'ghost'} color={'red'} onClick={() => signOut()}>
-                SIGN OUT
-              </Button>
+              <div>
+                <Button
+                  variant={'ghost'}
+                  color={'red'}
+                  onClick={() => signOut()}
+                >
+                  SIGN OUT
+                </Button>
+              </div>
             </Flex>
           </Popover.Content>
         </Popover.Root>
