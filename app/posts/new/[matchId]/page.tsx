@@ -118,7 +118,7 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
                   disabled={isSubmitting}
                 >
                   Publish
-                  {isSubmitting && <Spinner />}
+                  {/*{isSubmitting && <Spinner />}*/}
                 </Button>
               </div>
             </Flex>
