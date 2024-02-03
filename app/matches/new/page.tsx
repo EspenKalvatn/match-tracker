@@ -1,10 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { Button, TextField, Callout, Text, Card, Flex } from '@radix-ui/themes';
-import 'easymde/dist/easymde.min.css';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -14,6 +12,7 @@ import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 type MatchForm = z.infer<typeof createMatchSchema>;
 
@@ -49,20 +48,21 @@ const NewMatchPage = () => {
             onSubmit={handleSubmit(async (data) => {
               try {
                 setIsSubmitting(true);
-                const userId = session.data?.user.id;
+                const userId = session?.data?.user?.id;
                 const match = await axios.post('/api/matches', {
                   ...data,
                   userId,
                 });
+
                 if (match.status === 201) {
                   setMatchId(match.data.id);
                   setShowPostDialog(true);
                 }
               } catch (error) {
+                setError('An unexpected error occurred');
+              } finally {
                 setIsSubmitting(false);
-                setError('An unexpected error occured');
               }
-              setIsSubmitting(false);
             })}
           >
             <Flex justify={'start'}>
