@@ -4,7 +4,6 @@ import { Button, TextField, Callout, Text, Card, Flex } from '@radix-ui/themes';
 import 'easymde/dist/easymde.min.css';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -14,6 +13,7 @@ import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 type MatchForm = z.infer<typeof createMatchSchema>;
 
@@ -50,42 +50,38 @@ const NewMatchPage = () => {
               try {
                 setIsSubmitting(true);
                 const userId = session?.data?.user?.id;
-                const res = await fetch('/api/matches', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ ...data, userId }),
+                const match = await axios.post('/api/matches', {
+                  ...data,
+                  userId,
                 });
-                const match = await res.json();
 
-                if (res.status === 201) {
-                  setMatchId(match.id);
+                if (match.status === 201) {
+                  setMatchId(match.data.id);
                   setShowPostDialog(true);
                 }
               } catch (error) {
+                setError('An unexpected error occurred');
+              } finally {
                 setIsSubmitting(false);
-                setError('An unexpected error occured');
               }
-              setIsSubmitting(false);
             })}
           >
             <Flex justify={'start'}>
-              {/*<Controller*/}
-              {/*  name="date"*/}
-              {/*  control={control}*/}
-              {/*  render={({ field }) => (*/}
-              {/*    // <DatePicker*/}
-              {/*    //   selected={field.value ? new Date(field.value) : null}*/}
-              {/*    //   onChange={(date) => {*/}
-              {/*    //     const formattedDate = date ? date.toISOString() : null;*/}
-              {/*    //     field.onChange(formattedDate);*/}
-              {/*    //   }}*/}
-              {/*    //   dateFormat="yyyy-MM-dd"*/}
-              {/*    //   placeholderText="Select a date"*/}
-              {/*    // />*/}
-              {/*  )}*/}
-              {/*/>*/}
+              <Controller
+                name="date"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value ? new Date(field.value) : null}
+                    onChange={(date) => {
+                      const formattedDate = date ? date.toISOString() : null;
+                      field.onChange(formattedDate);
+                    }}
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText="Select a date"
+                  />
+                )}
+              />
               <ErrorMessage>{errors.date?.message}</ErrorMessage>
             </Flex>
 
