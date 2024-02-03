@@ -49,7 +49,7 @@ const NewMatchPage = () => {
             onSubmit={handleSubmit(async (data) => {
               try {
                 setIsSubmitting(true);
-                const userId = session.data?.user.id;
+                const userId = session?.data?.user?.id;
                 const res = await fetch('/api/matches', {
                   method: 'POST',
                   headers: {
@@ -71,21 +71,21 @@ const NewMatchPage = () => {
             })}
           >
             <Flex justify={'start'}>
-              <Controller
-                name="date"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    selected={field.value ? new Date(field.value) : null}
-                    onChange={(date) => {
-                      const formattedDate = date ? date.toISOString() : null;
-                      field.onChange(formattedDate);
-                    }}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="Select a date"
-                  />
-                )}
-              />
+              {/*<Controller*/}
+              {/*  name="date"*/}
+              {/*  control={control}*/}
+              {/*  render={({ field }) => (*/}
+              {/*    // <DatePicker*/}
+              {/*    //   selected={field.value ? new Date(field.value) : null}*/}
+              {/*    //   onChange={(date) => {*/}
+              {/*    //     const formattedDate = date ? date.toISOString() : null;*/}
+              {/*    //     field.onChange(formattedDate);*/}
+              {/*    //   }}*/}
+              {/*    //   dateFormat="yyyy-MM-dd"*/}
+              {/*    //   placeholderText="Select a date"*/}
+              {/*    // />*/}
+              {/*  )}*/}
+              {/*/>*/}
               <ErrorMessage>{errors.date?.message}</ErrorMessage>
             </Flex>
 
@@ -149,9 +149,9 @@ const NewMatchPage = () => {
             <Flex gap={'3'} justify={'end'} className={'pt-5'}>
               <div>
                 <Button color={'gray'} variant={'outline'}>
-                  {/*<Link href={'/matches'} className={'cursor-default'}>*/}
-                  Cancel
-                  {/*</Link>*/}
+                  <Link href={'/matches'} className={'cursor-default'}>
+                    Cancel
+                  </Link>
                 </Button>
               </div>
               <div>
