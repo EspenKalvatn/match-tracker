@@ -149,9 +149,9 @@ const NewMatchPage = () => {
             <Flex gap={'3'} justify={'end'} className={'pt-5'}>
               <div>
                 <Button color={'gray'} variant={'outline'}>
-                  <Link href={'/matches'} className={'cursor-default'}>
-                    Cancel
-                  </Link>
+                  {/*<Link href={'/matches'} className={'cursor-default'}>*/}
+                  Cancel
+                  {/*</Link>*/}
                 </Button>
               </div>
               <div>
