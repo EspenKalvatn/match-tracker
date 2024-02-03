@@ -17,17 +17,21 @@ const OptionsMenu: React.FC<OptionsMenuProps> = ({
 }) => (
   <Popover.Root>
     <Popover.Trigger>
-      <Button variant="ghost" color={'gray'}>
-        <HiOutlineDotsHorizontal />
-      </Button>
+      <div>
+        <Button variant="ghost" color={'gray'}>
+          <HiOutlineDotsHorizontal />
+        </Button>
+      </div>
     </Popover.Trigger>
     <Popover.Content>
       <Flex direction="column" gap="3" style={{ maxWidth: 500 }}>
         {userId === currentUserId && (
           <Flex direction={'column'} gap={'3'}>
-            <Button variant="ghost" color="red" onClick={onDelete}>
-              {children}
-            </Button>
+            <div>
+              <Button variant="ghost" color="red" onClick={onDelete}>
+                {children}
+              </Button>
+            </div>
           </Flex>
         )}
       </Flex>

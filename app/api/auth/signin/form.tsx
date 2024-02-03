@@ -82,10 +82,12 @@ const LoginForm = () => {
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
           <Flex justify={'center'} className={'pt-5'}>
-            <Button disabled={isSubmitting} size={'2'} className={'w-full'}>
-              LOGIN
-              {isSubmitting && <Spinner />}
-            </Button>
+            <div>
+              <Button disabled={isSubmitting} size={'2'} className={'w-full'}>
+                LOGIN
+                {isSubmitting && <Spinner />}
+              </Button>
+            </div>
           </Flex>
 
           <Flex justify="center" gap="5" align={'center'}>

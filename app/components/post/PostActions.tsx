@@ -16,29 +16,33 @@ const PostActions: React.FC<PostActionsProps> = ({
   setIsExpanded,
 }) => (
   <Flex align="stretch" justify="between" className="">
-    <Button
-      variant="ghost"
-      color={isLiked ? 'blue' : 'gray'}
-      size="3"
-      onClick={handleLike}
-    >
-      <AiOutlineLike />
-      <Text as="div" size="1">
-        Like
-      </Text>
-    </Button>
+    <div>
+      <Button
+        variant="ghost"
+        color={isLiked ? 'blue' : 'gray'}
+        size="3"
+        onClick={handleLike}
+      >
+        <AiOutlineLike />
+        <Text as="div" size="1">
+          Like
+        </Text>
+      </Button>
+    </div>
 
-    <Button
-      variant="ghost"
-      color="gray"
-      size="3"
-      onClick={() => setIsExpanded(!isExpanded)}
-    >
-      <AiOutlineComment />
-      <Text as="div" size="1">
-        Comment
-      </Text>
-    </Button>
+    <div>
+      <Button
+        variant="ghost"
+        color="gray"
+        size="3"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <AiOutlineComment />
+        <Text as="div" size="1">
+          Comment
+        </Text>
+      </Button>
+    </div>
   </Flex>
 );
 
