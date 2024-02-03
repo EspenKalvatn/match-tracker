@@ -50,12 +50,17 @@ const NewMatchPage = () => {
               try {
                 setIsSubmitting(true);
                 const userId = session.data?.user.id;
-                const match = await axios.post('/api/matches', {
-                  ...data,
-                  userId,
+                const res = await fetch('/api/matches', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ ...data, userId }),
                 });
-                if (match.status === 201) {
-                  setMatchId(match.data.id);
+                const match = await res.json();
+
+                if (res.status === 201) {
+                  setMatchId(match.id);
                   setShowPostDialog(true);
                 }
               } catch (error) {
