@@ -94,10 +94,12 @@ const RegisterForm = () => {
           <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
 
           <Flex justify={'center'} className={'pt-5'}>
-            <Button disabled={isSubmitting} size={'2'} className={'w-full'}>
-              SIGN UP
-              {isSubmitting && <Spinner />}
-            </Button>
+            <div>
+              <Button disabled={isSubmitting} size={'2'} className={'w-full'}>
+                SIGN UP
+                {isSubmitting && <Spinner />}
+              </Button>
+            </div>
           </Flex>
 
           <Flex justify="center" gap="5" align={'center'}>

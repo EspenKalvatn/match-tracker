@@ -98,21 +98,25 @@ const NewPostPage = ({ params }: { params: { matchId: string } }) => {
                 {...register('content')}
               />
             </TextField.Root>
-            <Flex justify={'end'} gap={'3'}>
-              <Button
-                type={'button'}
-                variant={'outline'}
-                color={'gray'}
-                onClick={() => {
-                  router.push('/matches');
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type={'submit'} disabled={isSubmitting}>
-                Publish
-                {isSubmitting && <Spinner />}
-              </Button>
+            <Flex justify={'end'} gap={'3'} align={'center'}>
+              <div>
+                <Button
+                  type={'button'}
+                  variant={'outline'}
+                  color={'gray'}
+                  onClick={() => {
+                    router.push('/matches');
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+              <div>
+                <Button variant={'solid'} disabled={isSubmitting}>
+                  Publish
+                  {isSubmitting && <Spinner />}
+                </Button>
+              </div>
             </Flex>
           </Flex>
         </form>

@@ -142,15 +142,19 @@ const NewMatchPage = () => {
             <ErrorMessage>{errors.competition?.message}</ErrorMessage>
 
             <Flex gap={'3'} justify={'end'} className={'pt-5'}>
-              <Button color={'gray'} variant={'outline'}>
-                <Link href={'/matches'} className={'cursor-default'}>
-                  Cancel
-                </Link>
-              </Button>
-              <Button disabled={isSubmitting}>
-                Add match
-                {isSubmitting && <Spinner />}
-              </Button>
+              <div>
+                <Button color={'gray'} variant={'outline'}>
+                  <Link href={'/matches'} className={'cursor-default'}>
+                    Cancel
+                  </Link>
+                </Button>
+              </div>
+              <div>
+                <Button disabled={isSubmitting}>
+                  Add match
+                  {isSubmitting && <Spinner />}
+                </Button>
+              </div>
             </Flex>
           </form>
         </Card>
@@ -167,24 +171,28 @@ const NewMatchPage = () => {
             <Text size="4">Match added successfully!</Text>
             <Text size="4">Do you want to share the match with others?</Text>
             <Flex gap={'5'}>
-              <Button
-                size={'3'}
-                color={'gray'}
-                variant={'outline'}
-                onClick={() => {
-                  router.push('/matches');
-                }}
-              >
-                No
-              </Button>
-              <Button
-                size={'3'}
-                onClick={() => {
-                  router.push(`/posts/new/${matchId}`);
-                }}
-              >
-                Yes
-              </Button>
+              <div>
+                <Button
+                  size={'3'}
+                  color={'gray'}
+                  variant={'outline'}
+                  onClick={() => {
+                    router.push('/matches');
+                  }}
+                >
+                  No
+                </Button>
+              </div>
+              <div>
+                <Button
+                  size={'3'}
+                  onClick={() => {
+                    router.push(`/posts/new/${matchId}`);
+                  }}
+                >
+                  Yes
+                </Button>
+              </div>
             </Flex>
           </Flex>
         </Card>

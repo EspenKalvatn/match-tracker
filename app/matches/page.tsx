@@ -62,9 +62,11 @@ const MyMatches = () => {
         </Table.Body>
       </Table.Root>
 
-      <Button>
-        <Link href="/matches/new">Add new match</Link>
-      </Button>
+      <div>
+        <Button>
+          <Link href="/matches/new">Add new match</Link>
+        </Button>
+      </div>
     </div>
   );
 };

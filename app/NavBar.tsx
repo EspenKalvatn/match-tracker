@@ -56,14 +56,16 @@ const NavBar = () => {
       <Flex gap={'3'} justify={'end'} align={'center'} className="flex-1">
         <Popover.Root>
           <Popover.Trigger>
-            <Button variant={'ghost'}>
-              <Avatar
-                size="3"
-                src=""
-                radius="full"
-                fallback={session.data?.user.name[0]}
-              />
-            </Button>
+            <div>
+              <Button variant={'ghost'}>
+                <Avatar
+                  size="3"
+                  src=""
+                  radius="full"
+                  fallback={session.data?.user.name[0]}
+                />
+              </Button>
+            </div>
           </Popover.Trigger>
           <Popover.Content>
             <Flex gap={'3'} direction={'column'}>
@@ -79,9 +81,11 @@ const NavBar = () => {
 
               <AlertDialog.Root>
                 <AlertDialog.Trigger>
-                  <Button color="red" variant={'ghost'}>
-                    DELETE ACCOUNT
-                  </Button>
+                  <div>
+                    <Button color="red" variant={'ghost'}>
+                      DELETE ACCOUNT
+                    </Button>
+                  </div>
                 </AlertDialog.Trigger>
                 <AlertDialog.Content style={{ maxWidth: 450 }}>
                   <AlertDialog.Title>DELETE ACCOUNT</AlertDialog.Title>
@@ -89,37 +93,47 @@ const NavBar = () => {
                     Are you sure? All user data will be deleted as well.
                   </AlertDialog.Description>
 
-                  <Flex gap="3" mt="4" justify="end">
+                  <Flex gap="3" mt="4" justify="end" align={'center'}>
                     <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
-                        Cancel
-                      </Button>
+                      <div>
+                        <Button variant="soft" color="gray">
+                          Cancel
+                        </Button>
+                      </div>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                      <Button
-                        variant="solid"
-                        color="red"
-                        onClick={async () => {
-                          const response = await fetch(
-                            `/api/users/${session.data?.user.id}`,
-                            {
-                              method: 'DELETE',
-                            },
-                          );
-                          if (response.ok) {
-                            await signOut();
-                          }
-                        }}
-                      >
-                        Delete account
-                      </Button>
+                      <div>
+                        <Button
+                          variant="solid"
+                          color="red"
+                          onClick={async () => {
+                            const response = await fetch(
+                              `/api/users/${session.data?.user.id}`,
+                              {
+                                method: 'DELETE',
+                              },
+                            );
+                            if (response.ok) {
+                              await signOut();
+                            }
+                          }}
+                        >
+                          Delete account
+                        </Button>
+                      </div>
                     </AlertDialog.Action>
                   </Flex>
                 </AlertDialog.Content>
               </AlertDialog.Root>
-              <Button variant={'ghost'} color={'red'} onClick={() => signOut()}>
-                SIGN OUT
-              </Button>
+              <div>
+                <Button
+                  variant={'ghost'}
+                  color={'red'}
+                  onClick={() => signOut()}
+                >
+                  SIGN OUT
+                </Button>
+              </div>
             </Flex>
           </Popover.Content>
         </Popover.Root>

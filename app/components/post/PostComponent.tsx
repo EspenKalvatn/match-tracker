@@ -132,7 +132,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
           <OptionsMenu
             userId={post.userId}
             currentUserId={session.data?.user.id}
-            onDelete={handleDeletePost}
+            onDelete={handleDeletePost()}
           >
             Delete post
           </OptionsMenu>
@@ -164,15 +164,17 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
             </Popover.Content>
           </Popover.Root>
 
-          <Button
-            color={'gray'}
-            variant={'ghost'}
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            <Text color={'gray'} size={'1'}>
-              {post.comments.length} comments
-            </Text>
-          </Button>
+          <div>
+            <Button
+              color={'gray'}
+              variant={'ghost'}
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              <Text color={'gray'} size={'1'}>
+                {post.comments.length} comments
+              </Text>
+            </Button>
+          </div>
         </Flex>
 
         <Separator my="0" size="4" />
@@ -196,6 +198,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
           >
             {post.comments.map((comment) => (
               <Comment
+                key={comment.id}
                 comment={comment}
                 sessionUserId={session.data?.user.id}
                 deleteComment={handleDeleteComment(comment.id)}
