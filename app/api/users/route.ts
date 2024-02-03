@@ -4,8 +4,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/lib/auth';
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
   try {
-    const session = await getServerSession(authOptions);
     const isAdmin = session?.user.role === 'ADMIN';
     if (!isAdmin) {
       return NextResponse.json({ status: 403, error: 'Forbidden' });
