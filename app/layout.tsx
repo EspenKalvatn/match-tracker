@@ -21,7 +21,10 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession();
   return (
-    <SessionProvider>
+    <SessionProvider
+      session={session}
+      basePath="https://match-tracker-git-feat-3-workflows-espenkalvatns-projects.vercel.app/api/auth"
+    >
       <ReactQueryClientProvider>
         <html lang="en">
           <body className={inter.className}>
