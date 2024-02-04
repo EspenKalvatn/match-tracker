@@ -2,6 +2,8 @@ name: Vercel Production Deployment
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  NEXTAUTH_URL: "https://matchtracker.vercel.app"
+
 on:
   push:
     branches:
@@ -16,7 +18,7 @@ jobs:
       - name: Pull Vercel Environment Information
         run: |
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          echo "NEXTAUTH_URL from Vercel: $NEXTAUTH_URL"
+          echo "NEXTAUTH_URL: $NEXTAUTH_URL"
 
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
