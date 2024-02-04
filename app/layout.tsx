@@ -7,6 +7,7 @@ import NavBar from './NavBar';
 import ReactQueryClientProvider from '@/app/components/ReactQueryClientProvider';
 import SessionProvider from '@/app/components/SessionProvider';
 import { getServerSession } from 'next-auth';
+import React from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,7 +22,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession();
   return (
-    <SessionProvider session={session}>
+    <SessionProvider>
       <ReactQueryClientProvider>
         <html lang="en">
           <body className={inter.className}>

@@ -15,6 +15,7 @@ import {
   Text,
 } from '@radix-ui/themes';
 import { signOut, useSession } from 'next-auth/react';
+import EnvironmentCallout from '@/app/components/EnvironmentCallout';
 
 const NavBar = () => {
   const currentPath = usePathname();
@@ -52,6 +53,8 @@ const NavBar = () => {
           ))}
         </ul>
       </Flex>
+
+      <EnvironmentCallout />
 
       <Flex gap={'3'} justify={'end'} align={'center'} className="flex-1">
         <Popover.Root>
@@ -108,7 +111,7 @@ const NavBar = () => {
                           color="red"
                           onClick={async () => {
                             const response = await fetch(
-                              `/api/users/${session.data?.user.id}`,
+                              `/api/users/${session.data?.user?.id}`,
                               {
                                 method: 'DELETE',
                               },
