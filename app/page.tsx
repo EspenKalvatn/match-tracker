@@ -23,6 +23,7 @@ export default function Home() {
   return (
     <Flex gap="5" direction="column" align="center">
       {posts &&
+        posts.length > 0 &&
         posts.map((post) => <PostComponent key={post.id} post={post} />)}
     </Flex>
   );
