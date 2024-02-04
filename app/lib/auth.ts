@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials, req) {
+        console.log('credentials', credentials);
         // TODO: add validation:
 
         const user = await prisma.user.findUnique({
