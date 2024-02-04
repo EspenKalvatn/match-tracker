@@ -3,7 +3,7 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   NEXTAUTH_URL: "https://matchtracker.vercel.app"
-
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
 on:
   push:
     branches:
