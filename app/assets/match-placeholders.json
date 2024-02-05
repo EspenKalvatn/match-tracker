@@ -1,0 +1,47 @@
+[
+  {
+    "homeTeam": "Manchester United",
+    "awayTeam": "Manchester City",
+    "homeScore": "1",
+    "awayScore": "6",
+    "date": "2011-10-23",
+    "competition": "Premier league",
+    "stadium": "Old Trafford"
+  },
+  {
+    "homeTeam": "Manchester City",
+    "awayTeam": "Manchester United",
+    "homeScore": "6",
+    "awayScore": "3",
+    "date": "2022-10-02",
+    "competition": "Premier league",
+    "stadium": "Etihad Stadium"
+  },
+  {
+    "homeTeam": "Manchester City",
+    "awayTeam": "Manchester United",
+    "homeScore": "4",
+    "awayScore": "1",
+    "date": "2022-03-06",
+    "competition": "Premier league",
+    "stadium": "Etihad Stadium"
+  },
+  {
+    "homeTeam": "Manchester City",
+    "awayTeam": "Manchester United",
+    "homeScore": "2",
+    "awayScore": "1",
+    "date": "2022-03-06",
+    "competition": "FA Cup",
+    "stadium": "Wembley Stadium"
+  },
+  {
+    "homeTeam": "Manchester City",
+    "awayTeam": "Manchester United",
+    "homeScore": "1",
+    "awayScore": "0",
+    "date": "2011-04-016",
+    "competition": "FA Cup",
+    "stadium": "Wembley Stadium"
+  }
+]

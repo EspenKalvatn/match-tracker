@@ -46,7 +46,7 @@ const RegisterForm = () => {
           </Callout.Root>
         )}
         <form
-          className=" space-y-3"
+          className=" space-y-4"
           onSubmit={handleSubmit(async (data) => {
             try {
               setIsSubmitting(true);
@@ -65,33 +65,44 @@ const RegisterForm = () => {
             }
           })}
         >
-          <TextField.Root>
-            <TextField.Input placeholder="Name" {...register('name')} />
-          </TextField.Root>
-          <ErrorMessage>{errors.name?.message}</ErrorMessage>
+          <Flex direction={'column'} gap={'1'}>
+            <Text size={'2'}>Name</Text>
+            <TextField.Root>
+              <TextField.Input {...register('name')} />
+            </TextField.Root>
+            <ErrorMessage>{errors.name?.message}</ErrorMessage>
+          </Flex>
 
-          <TextField.Root>
-            <TextField.Input placeholder="Email" {...register('email')} />
-          </TextField.Root>
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
+          <Flex direction={'column'} gap={'1'}>
+            <Text size={'2'}>Email</Text>
+            <TextField.Root>
+              <TextField.Input {...register('email')} />
+            </TextField.Root>
+            <ErrorMessage>{errors.email?.message}</ErrorMessage>
+          </Flex>
 
-          <TextField.Root>
-            <TextField.Input
-              type={'password'}
-              placeholder="Enter password"
-              {...register('password')}
-            />
-          </TextField.Root>
-          <ErrorMessage>{errors.password?.message}</ErrorMessage>
+          <Flex direction={'column'} gap={'1'}>
+            <Text size={'2'}>Password</Text>
 
-          <TextField.Root>
-            <TextField.Input
-              type={'password'}
-              placeholder="Repeat password"
-              {...register('confirmPassword')}
-            />
-          </TextField.Root>
-          <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+            <TextField.Root>
+              <TextField.Input type={'password'} {...register('password')} />
+            </TextField.Root>
+            <Text color={'gray'} size={'1'}>
+              Must be at least 8 characters long
+            </Text>
+            <ErrorMessage>{errors.password?.message}</ErrorMessage>
+          </Flex>
+
+          <Flex direction={'column'} gap={'1'}>
+            <Text size={'2'}>Repeat Password</Text>
+            <TextField.Root>
+              <TextField.Input
+                type={'password'}
+                {...register('confirmPassword')}
+              />
+            </TextField.Root>
+            <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+          </Flex>
 
           <Flex justify={'center'} className={'pt-5'}>
             <div>

@@ -45,7 +45,7 @@ const LoginForm = () => {
           </Callout.Root>
         )}
         <form
-          className=" space-y-3"
+          className=" space-y-4"
           onSubmit={handleSubmit(async (data) => {
             try {
               setIsSubmitting(true);
@@ -67,19 +67,23 @@ const LoginForm = () => {
             }
           })}
         >
-          <TextField.Root>
-            <TextField.Input placeholder="Email" {...register('email')} />
-          </TextField.Root>
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
+          <Flex direction={'column'} gap={'1'}>
+            <Text size={'2'}>Email</Text>
+            <TextField.Root>
+              <TextField.Input {...register('email')} />
+            </TextField.Root>
+            <ErrorMessage>{errors.email?.message}</ErrorMessage>
+          </Flex>
 
-          <TextField.Root>
-            <TextField.Input
-              type={'password'}
-              placeholder="Enter password"
-              {...register('password')}
-            />
-          </TextField.Root>
-          <ErrorMessage>{errors.password?.message}</ErrorMessage>
+          <Flex direction={'column'} gap={'1'}>
+            <Text size={'2'} className={''}>
+              Password
+            </Text>
+            <TextField.Root>
+              <TextField.Input type={'password'} {...register('password')} />
+            </TextField.Root>
+            <ErrorMessage>{errors.password?.message}</ErrorMessage>
+          </Flex>
 
           <Flex justify={'center'} className={'pt-5'}>
             <div>

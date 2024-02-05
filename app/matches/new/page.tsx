@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextField, Callout, Text, Card, Flex } from '@radix-ui/themes';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -11,9 +11,10 @@ import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import Link from 'next/link';
+import { PlaceholderMatch } from '@/app/types/Match';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
-
+import placeholderMatches from '@/app/assets/match-placeholders.json';
 type MatchForm = z.infer<typeof createMatchSchema>;
 
 const NewMatchPage = () => {
@@ -24,6 +25,19 @@ const NewMatchPage = () => {
 
   const router = useRouter();
   const session = useSession();
+
+  const [placeholder, setPlaceholder] = useState<PlaceholderMatch | null>(null);
+
+  useEffect(() => {
+    const getRandomItem = () => {
+      const randomIndex = Math.floor(Math.random() * placeholderMatches.length);
+      const selectedRandomItem: PlaceholderMatch =
+        placeholderMatches[randomIndex];
+      setPlaceholder(selectedRandomItem);
+    };
+
+    getRandomItem();
+  }, []); // Run the effect only once on component mount
 
   const {
     register,
@@ -66,39 +80,44 @@ const NewMatchPage = () => {
             })}
           >
             <Flex justify={'start'}>
-              <Controller
-                name="date"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    selected={field.value ? new Date(field.value) : null}
-                    onChange={(date) => {
-                      const formattedDate = date ? date.toISOString() : null;
-                      field.onChange(formattedDate);
-                    }}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="Select a date"
-                  />
-                )}
-              />
-              <ErrorMessage>{errors.date?.message}</ErrorMessage>
+              <Flex direction={'column'}>
+                <Text size={'2'}>Date</Text>
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      selected={field.value ? new Date(field.value) : null}
+                      onChange={(date) => {
+                        const formattedDate = date ? date.toISOString() : null;
+                        field.onChange(formattedDate);
+                      }}
+                      dateFormat="yyyy-MM-dd"
+                      placeholderText={placeholder?.date}
+                    />
+                  )}
+                />
+                <ErrorMessage>{errors.date?.message}</ErrorMessage>
+              </Flex>
             </Flex>
 
             <Flex justify={'between'}>
               <Flex direction={'column'} className={'w-[250px]'}>
+                <Text size={'2'}>Home team</Text>
                 <TextField.Root>
                   <TextField.Input
-                    placeholder="Home team"
+                    placeholder={placeholder?.homeTeam}
                     {...register('homeTeam')}
                   />
                 </TextField.Root>
                 <ErrorMessage>{errors.homeTeam?.message}</ErrorMessage>
               </Flex>
               <Flex direction={'column'} className={'w-[100px]'}>
+                <Text size={'2'}>Home score</Text>
                 <TextField.Root>
                   <TextField.Input
                     type="number"
-                    placeholder="Home score"
+                    placeholder={placeholder?.homeScore}
                     {...register('homeScore', { valueAsNumber: true })}
                   />
                 </TextField.Root>
@@ -108,19 +127,21 @@ const NewMatchPage = () => {
 
             <Flex justify={'between'}>
               <Flex direction={'column'} className={'w-[250px]'}>
+                <Text size={'2'}>Away team</Text>
                 <TextField.Root>
                   <TextField.Input
-                    placeholder="Away team"
+                    placeholder={placeholder?.awayTeam}
                     {...register('awayTeam')}
                   />
                 </TextField.Root>
                 <ErrorMessage>{errors.awayTeam?.message}</ErrorMessage>
               </Flex>
               <Flex direction={'column'} className={'w-[100px]'}>
+                <Text size={'2'}>Home score</Text>
                 <TextField.Root>
                   <TextField.Input
                     type="number"
-                    placeholder="Away score"
+                    placeholder={placeholder?.awayScore}
                     {...register('awayScore', { valueAsNumber: true })}
                   />
                 </TextField.Root>
@@ -128,18 +149,28 @@ const NewMatchPage = () => {
               </Flex>
             </Flex>
 
-            <TextField.Root>
-              <TextField.Input placeholder="Stadium" {...register('stadium')} />
-            </TextField.Root>
-            <ErrorMessage>{errors.stadium?.message}</ErrorMessage>
+            <Flex direction={'column'}>
+              <Text size={'2'}>Stadium</Text>
+              <TextField.Root>
+                <TextField.Input
+                  placeholder={placeholder?.stadium}
+                  {...register('stadium')}
+                />
+              </TextField.Root>
+              <ErrorMessage>{errors.stadium?.message}</ErrorMessage>
+            </Flex>
 
-            <TextField.Root>
-              <TextField.Input
-                placeholder="Competition"
-                {...register('competition')}
-              />
-            </TextField.Root>
-            <ErrorMessage>{errors.competition?.message}</ErrorMessage>
+            <Flex direction={'column'}>
+              <Text size={'2'}>Competition</Text>
+
+              <TextField.Root>
+                <TextField.Input
+                  placeholder={placeholder?.competition}
+                  {...register('competition')}
+                />
+              </TextField.Root>
+              <ErrorMessage>{errors.competition?.message}</ErrorMessage>
+            </Flex>
 
             <Flex gap={'3'} justify={'end'} className={'pt-5'}>
               <div>
