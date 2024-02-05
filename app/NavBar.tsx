@@ -162,6 +162,7 @@ const NavBar = () => {
         <Flex direction={'column'} gap={'0'} align={'center'}>
           {links.map((link) => (
             <Flex
+              key={link.href}
               direction={'column'}
               align={'center'}
               className={'w-full pt-4'}
