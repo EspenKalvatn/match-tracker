@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Callout, Flex } from '@radix-ui/themes';
 import { IoIosInformationCircleOutline } from 'react-icons/io';

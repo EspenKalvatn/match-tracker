@@ -125,7 +125,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
   };
 
   return (
-    <Card style={{ width: 500 }} className={'p-4'}>
+    <Card className={'p-4 w-full max-w-[500px] mx-auto'}>
       <Flex gap="3" direction="column">
         <Flex justify={'between'}>
           <PostHeader user={post.user} createdAt={getTimeAgo(post.createdAt)} />

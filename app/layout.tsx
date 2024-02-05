@@ -8,6 +8,7 @@ import ReactQueryClientProvider from '@/app/components/ReactQueryClientProvider'
 import SessionProvider from '@/app/components/SessionProvider';
 import { getServerSession } from 'next-auth';
 import React from 'react';
+import EnvironmentCallout from '@/app/components/EnvironmentCallout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,6 +34,7 @@ export default async function RootLayout({
               radius="large"
             >
               {session && <NavBar />}
+              <EnvironmentCallout />
               <main className="p-5">{children}</main>
               {/*<ThemePanel />*/}
             </Theme>
