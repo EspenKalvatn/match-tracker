@@ -36,6 +36,9 @@ export async function GET() {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
