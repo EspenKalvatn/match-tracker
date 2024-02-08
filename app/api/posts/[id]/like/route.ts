@@ -31,7 +31,10 @@ export async function POST(
     return NextResponse.json(newLike, { status: 201 });
   } catch (error) {
     console.error('Error updating post:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
 
@@ -63,6 +66,9 @@ export async function DELETE(
     return NextResponse.json(deletedLike, { status: 200 });
   } catch (error) {
     console.error('Error updating post:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

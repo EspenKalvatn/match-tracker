@@ -22,8 +22,25 @@ export const createUserSchema = z
   .object({
     name: z.string(),
     email: z.string().email(),
-    password: z.string().min(8),
+    password: z.string().min(8, 'Password must contain at least 8 characters'),
     confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords does not match',
+  });
+
+export const updateUserSchema = z
+  .object({
+    name: z.string(),
+    email: z.string().email(),
+    // email: z.union([z.literal(''), z.string().email()]),
+    password: z.union([
+      z.null(),
+      z.literal(''),
+      z.string().min(8, 'Password must contain at least 8 characters'),
+    ]),
+    confirmPassword: z.union([z.null(), z.literal(''), z.string().min(8)]),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],

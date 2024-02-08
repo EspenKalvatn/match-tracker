@@ -51,7 +51,10 @@ export async function GET(
     return NextResponse.json(post, { status: 200 });
   } catch (error) {
     console.error('Error fetching post:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
 
@@ -96,6 +99,9 @@ export async function DELETE(
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error('Error deleting post:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

@@ -98,52 +98,12 @@ const NavBar = () => {
                   role: {session.data?.user.role}
                 </Text>
 
-                <AlertDialog.Root>
-                  <AlertDialog.Trigger>
-                    <div>
-                      <Button color="red" variant={'ghost'}>
-                        DELETE ACCOUNT
-                      </Button>
-                    </div>
-                  </AlertDialog.Trigger>
-                  <AlertDialog.Content style={{ maxWidth: 450 }}>
-                    <AlertDialog.Title>DELETE ACCOUNT</AlertDialog.Title>
-                    <AlertDialog.Description size="2">
-                      Are you sure? All user data will be deleted as well.
-                    </AlertDialog.Description>
+                <Link href={'/user'}>
+                  <Button variant="ghost" color="gray">
+                    MY ACCOUNT
+                  </Button>
+                </Link>
 
-                    <Flex gap="3" mt="4" justify="end" align={'center'}>
-                      <AlertDialog.Cancel>
-                        <div>
-                          <Button variant="soft" color="gray">
-                            Cancel
-                          </Button>
-                        </div>
-                      </AlertDialog.Cancel>
-                      <AlertDialog.Action>
-                        <div>
-                          <Button
-                            variant="solid"
-                            color="red"
-                            onClick={async () => {
-                              const response = await fetch(
-                                `/api/users/${session.data?.user?.id}`,
-                                {
-                                  method: 'DELETE',
-                                },
-                              );
-                              if (response.ok) {
-                                await signOut();
-                              }
-                            }}
-                          >
-                            Delete account
-                          </Button>
-                        </div>
-                      </AlertDialog.Action>
-                    </Flex>
-                  </AlertDialog.Content>
-                </AlertDialog.Root>
                 <div>
                   <Button
                     variant={'ghost'}
