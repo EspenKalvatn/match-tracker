@@ -30,6 +30,11 @@ export const createUserSchema = z
     message: 'Passwords does not match',
   });
 
+export const updateUserSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+});
+
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),

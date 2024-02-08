@@ -2,6 +2,8 @@ import prisma from '../../../../prisma/client';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/lib/auth';
+import { updateUserSchema } from '@/app/validationSchemas';
+import { hash } from 'bcrypt';
 
 export async function GET(
   request: Request,
@@ -27,6 +29,82 @@ export async function GET(
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.error('Error fetching user:', error);
+    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+  }
+}
+
+export async function PUT(
+  request: Request,
+  {
+    params,
+  }: {
+    params: { id: string };
+  },
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    const body = await request.json();
+    const validation = updateUserSchema.safeParse(body);
+
+    if (!validation.success) {
+      return NextResponse.json({ status: 400, error: validation.error });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ status: 404, error: 'Resource not found' });
+    }
+
+    if (user.id !== session?.user.id && session?.user.role !== 'admin') {
+      return NextResponse.json({
+        status: 401,
+        error: 'You are not authorized to update this resource',
+      });
+    }
+
+    // Check if email is already in use
+    if (body.email) {
+      const existingEmail = await prisma.user.findFirst({
+        where: {
+          email: body.email,
+        },
+      });
+
+      if (existingEmail && existingEmail.id !== user.id) {
+        return NextResponse.json({
+          status: 400,
+          error: 'Email already in use',
+        });
+      }
+    }
+
+    // Update password if provided
+    let updatedPassword = null;
+    if (body.password) {
+      updatedPassword = await hash(body.password, 10);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: params.id,
+      },
+      data: {
+        name: body.name,
+        email: body.email,
+        ...(updatedPassword && { password: updatedPassword }),
+        ...(session?.user.role === 'admin' && { role: body.role }), // Only admin can update role
+      },
+    });
+
+    const { password, ...rest } = updatedUser;
+    return NextResponse.json(rest, { status: 200 });
+  } catch (error) {
+    console.error('Error updating user:', error);
     return NextResponse.json({ status: 500, error: 'Internal Server Error' });
   }
 }
