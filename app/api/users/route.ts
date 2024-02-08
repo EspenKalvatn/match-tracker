@@ -8,12 +8,15 @@ export async function GET() {
   try {
     const isAdmin = session?.user.role === 'ADMIN';
     if (!isAdmin) {
-      return NextResponse.json({ status: 403, error: 'Forbidden' });
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     const users = await prisma.user.findMany();
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
     console.error('Error fetching users:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

@@ -17,19 +17,27 @@ export async function GET(
       },
     });
     if (!user) {
-      return NextResponse.json({ status: 404, error: 'Resource not found' });
+      return NextResponse.json(
+        { error: 'Resource not found' },
+        { status: 404 },
+      );
     }
     if (user.id !== session?.user.id && session?.user.role !== 'admin') {
-      return NextResponse.json({
-        status: 401,
-        error: 'You are not authorized to view this resource',
-      });
+      return NextResponse.json(
+        { error: 'You are not authorized to view this resource' },
+        {
+          status: 401,
+        },
+      );
     }
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.error('Error fetching user:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
 
@@ -47,7 +55,7 @@ export async function PUT(
     const validation = updateUserSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json({ status: 400, error: validation.error });
+      return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -57,14 +65,21 @@ export async function PUT(
     });
 
     if (!user) {
-      return NextResponse.json({ status: 404, error: 'Resource not found' });
+      return NextResponse.json(
+        { error: 'Resource not found' },
+        { status: 404 },
+      );
     }
 
     if (user.id !== session?.user.id && session?.user.role !== 'admin') {
-      return NextResponse.json({
-        status: 401,
-        error: 'You are not authorized to update this resource',
-      });
+      return NextResponse.json(
+        {
+          error: 'You are not authorized to update this resource',
+        },
+        {
+          status: 401,
+        },
+      );
     }
 
     // Check if email is already in use
@@ -76,10 +91,14 @@ export async function PUT(
       });
 
       if (existingEmail && existingEmail.id !== user.id) {
-        return NextResponse.json({
-          status: 400,
-          error: 'Email already in use',
-        });
+        return NextResponse.json(
+          {
+            error: 'Email already in use',
+          },
+          {
+            status: 400,
+          },
+        );
       }
     }
 
@@ -105,7 +124,10 @@ export async function PUT(
     return NextResponse.json(rest, { status: 200 });
   } catch (error) {
     console.error('Error updating user:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
 
@@ -123,14 +145,21 @@ export async function DELETE(
     });
 
     if (!user) {
-      return NextResponse.json({ status: 404, error: 'Resource not found' });
+      return NextResponse.json(
+        { error: 'Resource not found' },
+        { status: 404 },
+      );
     }
 
     if (user.id !== session?.user.id && session?.user.role !== 'admin') {
-      return NextResponse.json({
-        status: 401,
-        error: 'You are not authorized to delete this resource',
-      });
+      return NextResponse.json(
+        {
+          error: 'You are not authorized to delete this resource',
+        },
+        {
+          status: 401,
+        },
+      );
     }
 
     const results = await prisma.$transaction([
@@ -161,6 +190,9 @@ export async function DELETE(
     });
   } catch (error) {
     console.error('Error deleting user:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

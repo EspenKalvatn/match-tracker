@@ -20,13 +20,19 @@ export async function GET(
       },
     });
     if (!match) {
-      return NextResponse.json({ status: 404, error: 'Resource not found' });
+      return NextResponse.json(
+        { error: 'Resource not found' },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json(match, { status: 200 });
   } catch (error) {
     console.error('Error fetching match:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
 
@@ -41,12 +47,19 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json({
-      status: 200,
-      message: 'Resource deleted successfully',
-    });
+    return NextResponse.json(
+      {
+        message: 'Resource deleted successfully',
+      },
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
     console.error('Error deleting match:', error);
-    return NextResponse.json({ status: 500, error: 'Internal Server Error' });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
