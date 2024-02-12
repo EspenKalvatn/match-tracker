@@ -28,6 +28,8 @@ export const authOptions: NextAuthOptions = {
           email: dbUser?.email,
           name: dbUser?.name,
           role: dbUser?.role,
+          avatarColor: dbUser?.avatarColor,
+          avatarInitials: dbUser?.avatarInitials,
         };
       }
 

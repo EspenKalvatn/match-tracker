@@ -27,16 +27,16 @@ model Match {
 }
 
 model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   content   String
   likes     Like[]
   comments  Comment[]
-  match     Match    @relation("MatchPosts", fields: [matchId], references: [id])
-  matchId   String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  match     Match     @relation("MatchPosts", fields: [matchId], references: [id])
+  matchId   String    @db.ObjectId
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String    @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Like {
@@ -55,7 +55,7 @@ model Comment {
   postId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.ObjectId
-  content String
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -66,15 +66,17 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  name      String
-  role      Role     @default(USER)
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Match     Match[]
-  Post      Post[]
-  Like      Like[]
-  Comment   Comment[]
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  email          String    @unique
+  name           String
+  role           Role      @default(USER)
+  avatarInitials String
+  avatarColor    String
+  password       String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  Match          Match[]
+  Post           Post[]
+  Like           Like[]
+  Comment        Comment[]
 }

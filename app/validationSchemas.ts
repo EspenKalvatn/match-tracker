@@ -34,7 +34,11 @@ export const updateUserSchema = z
   .object({
     name: z.string(),
     email: z.string().email(),
-    // email: z.union([z.literal(''), z.string().email()]),
+    avatarColor: z.string(),
+    avatarInitials: z
+      .string()
+      .min(1, 'Initials must be minimum 1 character')
+      .max(2, 'Initials must be maximum 2 characters'),
     password: z.union([
       z.null(),
       z.literal(''),
