@@ -22,6 +22,7 @@ import { useIsMobile } from '@/app/utils/useIsMobile';
 const NavBar = () => {
   const currentPath = usePathname();
   const session = useSession();
+  const user = session.data?.user;
 
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const isMobile = useIsMobile(768);
@@ -81,7 +82,8 @@ const NavBar = () => {
                     size="3"
                     src=""
                     radius="full"
-                    fallback={session.data?.user.name[0]}
+                    color={user?.avatarColor}
+                    fallback={user?.avatarInitials || user?.name[0] || ''}
                   />
                 </Button>
               </div>
@@ -89,13 +91,13 @@ const NavBar = () => {
             <Popover.Content>
               <Flex gap={'3'} direction={'column'}>
                 <Text size={'2'} color={'gray'}>
-                  {session.data?.user.name}
+                  {user?.name}
                 </Text>
                 <Text size={'2'} color={'gray'}>
-                  {session.data?.user.email}
+                  {user?.email}
                 </Text>
                 <Text size={'2'} color={'gray'}>
-                  role: {session.data?.user.role}
+                  role: {user?.role}
                 </Text>
 
                 <Link href={'/user'}>

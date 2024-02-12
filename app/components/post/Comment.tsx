@@ -16,7 +16,13 @@ const Comment: React.FC<CommentProps> = ({
   deleteComment,
 }) => (
   <Flex key={comment.id} gap={'3'}>
-    <Avatar size="2" src="" radius="full" fallback={comment.user.name[0]} />
+    <Avatar
+      size="2"
+      src=""
+      radius="full"
+      color={comment.user.avatarColor || 'green'}
+      fallback={comment.user.avatarInitials || comment.user.name[0]}
+    />
     <Flex direction={'column'} className={'w-full'}>
       <Card>
         <Flex direction={'column'} gap="2">
