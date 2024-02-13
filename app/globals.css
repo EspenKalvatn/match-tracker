@@ -1,9 +1,11 @@
-@import '@radix-ui/themes/styles.css' layer(radix_ui);
-@layer tw_base, radix_ui, tw_components_utils;
+/*@import '@radix-ui/themes/styles.css' layer(radix_ui);*/
+/*@layer tw_base, radix_ui, tw_components_utils;*/
 
 @layer tw_base {
   @tailwind base;
 }
+
+@import '@radix-ui/themes/styles.css';
 
 @layer tw_components_utils {
   @tailwind components;

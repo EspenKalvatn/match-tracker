@@ -19,37 +19,11 @@ import { updateUserSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
 import axios from 'axios';
 import { AvatarColor } from '@/app/types/User';
+import radixUiColors from '@/app/assets/radix-ui-colors.json';
 
 type UpdateUserForm = z.infer<typeof updateUserSchema>;
 
-const avatarColors: AvatarColor[] = [
-  'tomato',
-  'red',
-  'ruby',
-  'crimson',
-  'pink',
-  'plum',
-  'purple',
-  'violet',
-  'iris',
-  'indigo',
-  'blue',
-  'cyan',
-  'teal',
-  'jade',
-  'green',
-  'grass',
-  'brown',
-  'orange',
-  'sky',
-  'mint',
-  'lime',
-  'yellow',
-  'amber',
-  'gold',
-  'bronze',
-  'gray',
-];
+const avatarColors: AvatarColor[] = radixUiColors as AvatarColor[];
 
 const UserPage = () => {
   const [error, setError] = useState('');
@@ -59,8 +33,6 @@ const UserPage = () => {
 
   const session = useSession();
   const user = session.data?.user;
-
-  console.log('user', user);
 
   const {
     register,
@@ -153,7 +125,7 @@ const UserPage = () => {
                 render={({ field }) => (
                   <Select.Root onValueChange={field.onChange} size={'1'}>
                     <Select.Trigger placeholder={'Color'} variant={'ghost'} />
-                    <Select.Content>
+                    <Select.Content variant={'soft'} color={'gray'}>
                       {avatarColors.map((color, index) => (
                         <Select.Item key={index} value={color}>
                           <Avatar
