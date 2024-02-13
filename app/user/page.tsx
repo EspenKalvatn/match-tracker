@@ -106,7 +106,7 @@ const UserPage = () => {
 
           <Flex justify={'between'} align={'start'}>
             <Flex direction={'column'}>
-              <Text>Avatar initials</Text>
+              <Text size={'2'}>Avatar initials</Text>
               <TextField.Root>
                 <TextField.Input
                   defaultValue={user?.avatarInitials || '?'}
@@ -117,7 +117,7 @@ const UserPage = () => {
             </Flex>
 
             <Flex direction={'column'} align={'center'} gap={'1'}>
-              <Text>Avatar color</Text>
+              <Text size={'2'}>Avatar color</Text>
               <Controller
                 name="avatarColor"
                 control={control}
