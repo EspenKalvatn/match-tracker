@@ -27,10 +27,7 @@ interface Like {
 export interface Comment {
   id: string;
   userId: string;
-  user: {
-    name: string;
-    id: string;
-  };
+  user: User;
   content: string;
   createdAt: string;
   updatedAt: string;

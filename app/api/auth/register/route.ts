@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
       data: {
         name: body.name,
         email: body.email,
+        avatarColor: 'green',
+        avatarInitials: body.name[0].toUpperCase(),
         password: hashedPassword,
       },
     });

@@ -13,6 +13,8 @@ export async function GET() {
           select: {
             name: true,
             id: true,
+            avatarColor: true,
+            avatarInitials: true,
           },
         },
         likes: {
@@ -21,6 +23,8 @@ export async function GET() {
               select: {
                 name: true,
                 id: true,
+                avatarColor: true,
+                avatarInitials: true,
               },
             },
           },
@@ -31,6 +35,8 @@ export async function GET() {
               select: {
                 name: true,
                 id: true,
+                avatarColor: true,
+                avatarInitials: true,
               },
             },
           },

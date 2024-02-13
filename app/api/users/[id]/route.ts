@@ -115,6 +115,8 @@ export async function PUT(
       data: {
         name: body.name,
         email: body.email,
+        ...(body.avatarInitials && { avatarInitials: body.avatarInitials }),
+        ...(body.avatarColor && { avatarColor: body.avatarColor }),
         ...(updatedPassword && { password: updatedPassword }),
         ...(session?.user.role === 'admin' && { role: body.role }), // Only admin can update role
       },

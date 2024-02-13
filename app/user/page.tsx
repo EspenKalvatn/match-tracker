@@ -6,19 +6,24 @@ import {
   Button,
   Callout,
   Flex,
+  Select,
   Text,
   TextField,
 } from '@radix-ui/themes';
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import { signOut, useSession } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
+import { Controller, Form, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateUserSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
 import axios from 'axios';
+import { AvatarColor } from '@/app/types/User';
+import radixUiColors from '@/app/assets/radix-ui-colors.json';
 
 type UpdateUserForm = z.infer<typeof updateUserSchema>;
+
+const avatarColors: AvatarColor[] = radixUiColors as AvatarColor[];
 
 const UserPage = () => {
   const [error, setError] = useState('');
@@ -32,6 +37,7 @@ const UserPage = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<UpdateUserForm>({
     resolver: zodResolver(updateUserSchema),
@@ -60,11 +66,14 @@ const UserPage = () => {
         <form
           className=" space-y-4 "
           onSubmit={handleSubmit(async (data) => {
+            console.log(data);
             try {
               setIsSubmitting(true);
               const body = {
                 name: data.name,
                 email: data.email,
+                avatarColor: data.avatarColor,
+                avatarInitials: data.avatarInitials,
                 password: data.password || null,
                 confirmPassword: data.confirmPassword || null,
               };
@@ -86,9 +95,55 @@ const UserPage = () => {
           <Flex justify={'center'}>
             <Text size={'5'}>Edit Profile</Text>
           </Flex>
+          <Flex justify={'center'}>
+            <Avatar
+              size={'8'}
+              radius={'full'}
+              color={user?.avatarColor || 'green'}
+              fallback={user?.avatarInitials || user?.name[0] || ''}
+            />
+          </Flex>
 
-          <Flex direction={'column'} align={'center'}>
-            <Avatar size={'8'} radius={'full'} fallback={user?.name[0]} />
+          <Flex justify={'between'} align={'start'}>
+            <Flex direction={'column'}>
+              <Text size={'2'}>Avatar initials</Text>
+              <TextField.Root>
+                <TextField.Input
+                  defaultValue={user?.avatarInitials || '?'}
+                  {...register('avatarInitials')}
+                />
+              </TextField.Root>
+              <ErrorMessage>{errors.avatarInitials?.message}</ErrorMessage>
+            </Flex>
+
+            <Flex direction={'column'} align={'center'} gap={'1'}>
+              <Text size={'2'}>Avatar color</Text>
+              <Controller
+                name="avatarColor"
+                control={control}
+                defaultValue={user?.avatarColor || 'red'}
+                render={({ field }) => (
+                  <Select.Root onValueChange={field.onChange} size={'1'}>
+                    <Select.Trigger placeholder={'Color'} variant={'ghost'} />
+                    <Select.Content variant={'soft'} color={'gray'}>
+                      {avatarColors.map((color, index) => (
+                        <Select.Item key={index} value={color}>
+                          <Avatar
+                            size={'1'}
+                            color={color}
+                            radius={'full'}
+                            fallback={
+                              user?.avatarInitials || user?.name[0] || ''
+                            }
+                          />
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                )}
+              />
+              <ErrorMessage>{errors.avatarColor?.message}</ErrorMessage>
+            </Flex>
           </Flex>
 
           <Flex direction={'column'} gap={'2'}>
@@ -101,7 +156,6 @@ const UserPage = () => {
             </TextField.Root>
             <ErrorMessage>{errors.name?.message}</ErrorMessage>
           </Flex>
-
           <Flex direction={'column'} gap={'2'}>
             <Text size={'2'}>Email</Text>
             <TextField.Root>
@@ -112,7 +166,6 @@ const UserPage = () => {
             </TextField.Root>
             <ErrorMessage>{errors.email?.message}</ErrorMessage>
           </Flex>
-
           <Flex direction={'column'} gap={'1'}>
             <Text size={'2'}>New Password</Text>
 
@@ -124,7 +177,6 @@ const UserPage = () => {
             </Text>
             <ErrorMessage>{errors.password?.message}</ErrorMessage>
           </Flex>
-
           <Flex direction={'column'} gap={'1'}>
             <Text size={'2'}>Repeat Password</Text>
             <TextField.Root>
@@ -135,7 +187,6 @@ const UserPage = () => {
             </TextField.Root>
             <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
           </Flex>
-
           <Flex gap={'2'}>
             <AlertDialog.Root>
               <AlertDialog.Trigger>

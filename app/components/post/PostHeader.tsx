@@ -7,7 +7,13 @@ const PostHeader: React.FC<{ user: User; createdAt: string }> = ({
   createdAt,
 }) => (
   <Flex gap="5" align="center">
-    <Avatar size="3" src={user.avatar} radius="full" fallback={user.name[0]} />
+    <Avatar
+      size="3"
+      src={user.avatar}
+      radius="full"
+      color={user.avatarColor || 'green'}
+      fallback={user.avatarInitials || user.name[0]}
+    />
     <Box className="">
       <Text as="div" size="2" weight="bold">
         {user.name}

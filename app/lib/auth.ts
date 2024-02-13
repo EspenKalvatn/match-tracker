@@ -28,6 +28,8 @@ export const authOptions: NextAuthOptions = {
           email: dbUser?.email,
           name: dbUser?.name,
           role: dbUser?.role,
+          avatarColor: dbUser?.avatarColor,
+          avatarInitials: dbUser?.avatarInitials,
         };
       }
 
@@ -47,7 +49,6 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials, req) {
-        console.log('credentials', credentials);
         // TODO: add validation:
 
         const user = await prisma.user.findUnique({
