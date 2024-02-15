@@ -34,7 +34,7 @@ export default async function RootLayout({
               radius="large"
             >
               {session && <NavBar />}
-              <EnvironmentCallout />
+              {process.env.NODE_ENV === 'development' && <EnvironmentCallout />}
               <main className="p-5">{children}</main>
               {/*<ThemePanel />*/}
             </Theme>
