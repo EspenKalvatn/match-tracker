@@ -1,0 +1,31 @@
+name: Merge to Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge-to-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Merge to test
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          # Make sure the test branch exists
+          git checkout -B test
+          
+          # Merge changes from main into test
+          git merge main --no-ff
+       
+          # Commit changes with the updated database configuration
+          git commit -am "Merge changes from main"
+          
+          # Push changes to the test branch
+          git push origin test
