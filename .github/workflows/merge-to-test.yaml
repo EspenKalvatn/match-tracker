@@ -1,0 +1,24 @@
+name: Merge to Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge-to-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Merge main back to test
+        run: |
+          git fetch --unshallow
+          git checkout test
+          git pull
+          git merge --no-ff main -m "Auto-merge main to test"
+          git push
