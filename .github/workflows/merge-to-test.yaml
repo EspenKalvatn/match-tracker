@@ -15,7 +15,7 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-      - name: Merge main back to test
+      - name: Merge main into test
         run: |
           git fetch --unshallow
           git checkout test
